@@ -76,8 +76,8 @@ def submit_gemini_job(model_config):
     }
 
     batch = {
-        "origin": "gemini_test_script",
-        "destination": "gallery",
+        "origin": "QuantiMax",
+        "destination": "sandbox", # Using sandbox or None to avoid gallery
         "graph": graph,
         "runs": 1
     }
@@ -139,6 +139,50 @@ def main():
                     break
             except Exception as e:
                 print(f"Error checking batch status: {e}")
+
+        # 5. Get Result
+        if status.get('completed') > 0:
+            print("Job completed. Fetching result...")
+            try:
+                # We know there is only 1 item in this batch
+                item_ids = result.get('item_ids', [])
+                if not item_ids:
+                    print("No item IDs found.")
+                    return
+
+                item_id = item_ids[0]
+                # v1/queue/{queue_id}/i/{item_id}
+                response = requests.get(f"{BASE_URL}/v1/queue/default/i/{item_id}")
+                response.raise_for_status()
+                queue_item = response.json()
+                
+                # Extract image name from session results
+                # session -> results -> <node_id> -> image -> image_name
+                session = queue_item.get('session', {})
+                results = session.get('results', {})
+                
+                image_name = None
+                for node_id, node_output in results.items():
+                    if 'image' in node_output:
+                        image_name = node_output['image'].get('image_name')
+                        if image_name:
+                            print(f"Found image in node {node_id}")
+                            break
+                            
+                if image_name:
+                    image_url = f"{BASE_URL}/v1/images/i/{image_name}/full"
+                    print(f"FAILED: Image URL: {image_url}") # Labeling as FAILED just to grab attention if needed, but here implies Success really. User asked for URL.
+                    print(f"SUCCESS: Generated Image URL: {image_url}")
+                else:
+                    print("Could not find image output in session results.")
+                    print(f"Debug - Results keys: {list(results.keys())}")
+                    if results:
+                        first_key = list(results.keys())[0]
+                        print(f"Debug - First result: {results[first_key]}")
+                    
+            except Exception as e:
+                print(f"Error fetching result: {e}")
+
 
 if __name__ == "__main__":
     main()

@@ -8,7 +8,7 @@ import {
 } from 'features/controlLayers/store/paramsSlice';
 import type { ParameterGeminiPersonGeneration } from 'features/parameters/types/parameterSchemas';
 import { memo, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+
 
 const selectGeminiSettings = createSelector(selectGeminiPersonGeneration, (personGeneration) => ({
     personGeneration,
@@ -17,7 +17,6 @@ const selectGeminiSettings = createSelector(selectGeminiPersonGeneration, (perso
 const PERSON_GENERATION_OPTIONS: ParameterGeminiPersonGeneration[] = ['dont_allow', 'allow_adult', 'allow_all'];
 
 const GeminiSettings = () => {
-    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const { personGeneration } = useAppSelector(selectGeminiSettings);
 
@@ -40,6 +39,13 @@ const GeminiSettings = () => {
         [personGeneration, personGenerationOptions]
     );
 
+    const handleChangePersonGeneration = useCallback(
+        (item: { label: string; value: string } | null | undefined) => {
+            onChangePersonGeneration((item?.value as ParameterGeminiPersonGeneration) ?? 'allow_adult');
+        },
+        [onChangePersonGeneration]
+    );
+
     return (
         <Flex direction="column" gap={4}>
             <FormControl>
@@ -49,7 +55,7 @@ const GeminiSettings = () => {
                 <Combobox
                     options={personGenerationOptions}
                     value={selectedPersonGeneration}
-                    onChange={(item) => onChangePersonGeneration((item?.value as ParameterGeminiPersonGeneration) ?? 'allow_adult')}
+                    onChange={handleChangePersonGeneration}
                 />
             </FormControl>
         </Flex>

@@ -1,5 +1,4 @@
 import { Flex, Image, Spinner } from '@invoke-ai/ui-library';
-import InvokeLogoWhite from 'public/assets/images/invoke-symbol-wht-lrg.svg';
 import { memo } from 'react';
 
 // This component loads before the theme so we cannot use theme tokens here
@@ -14,7 +13,7 @@ const Loading = () => {
       inset={0}
       zIndex={99999}
     >
-      <Image src={InvokeLogoWhite} w="8rem" h="8rem" />
+      <Image src="/assets/images/invoke-symbol-wht-lrg.svg" w="8rem" h="8rem" />
       <Spinner
         label="Loading"
         color="hsl(220 12% 68% / 1)" // base.300

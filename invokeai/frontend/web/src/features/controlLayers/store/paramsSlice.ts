@@ -13,7 +13,6 @@ import {
   getInitialParamsState,
   MAX_POSITIVE_PROMPT_HISTORY,
   zParamsState,
-  zParameterGeminiPersonGeneration,
 } from 'features/controlLayers/store/types';
 import { calculateNewSize } from 'features/controlLayers/util/getScaledBoundingBoxDimensions';
 import {
@@ -247,6 +246,9 @@ const slice = createSlice({
     },
     setCanvasCoherenceMinDenoise: (state, action: PayloadAction<number>) => {
       state.canvasCoherenceMinDenoise = action.payload;
+    },
+    setGeminiPersonGeneration: (state, action: PayloadAction<ParameterGeminiPersonGeneration>) => {
+      state.geminiPersonGeneration = action.payload;
     },
 
     //#region Dimensions

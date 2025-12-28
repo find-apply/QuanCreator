@@ -16,5 +16,5 @@ export const useOriginText = (origin: S['SessionQueueItem']['origin']) => {
     return t('queue.upscaling');
   }
 
-  return t('queue.other');
+  return origin ?? t('queue.other');
 };

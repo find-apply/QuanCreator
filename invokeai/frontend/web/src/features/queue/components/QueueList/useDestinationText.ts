@@ -12,5 +12,5 @@ export const useDestinationText = (destination: S['SessionQueueItem']['destinati
     return t('queue.gallery');
   }
 
-  return t('queue.other');
+  return destination ?? t('queue.other');
 };

@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from 'app/store/storeHooks';
 import { selectWorkflowId } from 'features/nodes/store/selectors';
 import { workflowModeChanged } from 'features/nodes/store/workflowLibrarySlice';
 import { useLoadWorkflowWithDialog } from 'features/workflowLibrary/components/LoadWorkflowConfirmationAlertDialog';
-import InvokeLogo from 'public/assets/images/invoke-symbol-wht-lrg.svg';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PiImage } from 'react-icons/pi';
@@ -94,7 +93,7 @@ export const WorkflowListItem = memo(({ workflow }: { workflow: WorkflowRecordLi
               )}
               {workflow.category === 'default' && (
                 <Image
-                  src={InvokeLogo}
+                  src="/assets/images/invoke-symbol-wht-lrg.svg"
                   alt="invoke-logo"
                   w="14px"
                   h="14px"
@@ -160,7 +159,7 @@ const DefaultThumbnailFallback = memo(() => {
       justifyContent="center"
       opacity={0.3}
     >
-      <Image src={InvokeLogo} alt="invoke-logo" userSelect="none" boxSize={FALLBACK_ICON_SIZE} p={1} />
+      <Image src="/assets/images/invoke-symbol-wht-lrg.svg" alt="invoke-logo" userSelect="none" boxSize={FALLBACK_ICON_SIZE} p={1} />
     </Flex>
   );
 });

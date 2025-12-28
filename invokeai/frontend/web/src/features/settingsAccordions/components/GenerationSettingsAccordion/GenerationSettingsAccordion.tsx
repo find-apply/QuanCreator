@@ -11,6 +11,7 @@ import ParamCFGScale from 'features/parameters/components/Core/ParamCFGScale';
 import ParamGuidance from 'features/parameters/components/Core/ParamGuidance';
 import ParamScheduler from 'features/parameters/components/Core/ParamScheduler';
 import ParamSteps from 'features/parameters/components/Core/ParamSteps';
+import GeminiSettings from 'features/settingsAccordions/components/GeminiSettings/GeminiSettings';
 import { MainModelPicker } from 'features/settingsAccordions/components/GenerationSettingsAccordion/MainModelPicker';
 import { useExpanderToggle } from 'features/settingsAccordions/hooks/useExpanderToggle';
 import { useStandaloneAccordionToggle } from 'features/settingsAccordions/hooks/useStandaloneAccordionToggle';
@@ -18,8 +19,6 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelectedModelConfig } from 'services/api/hooks/useSelectedModelConfig';
 import { isFluxFillMainModelModelConfig } from 'services/api/types';
-
-import GeminiSettings from '../GeminiSettings/GeminiSettings';
 
 const formLabelProps: FormLabelProps = {
   minW: '4rem',
