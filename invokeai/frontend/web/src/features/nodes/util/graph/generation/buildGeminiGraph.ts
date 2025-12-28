@@ -2,7 +2,7 @@ import { logger } from 'app/logging/logger';
 import { getPrefixedId } from 'features/controlLayers/konva/util';
 import { selectMainModelConfig } from 'features/controlLayers/store/paramsSlice';
 import { Graph } from 'features/nodes/util/graph/generation/Graph';
-import { selectPresetModifiedPrompts } from 'features/nodes/util/graph/graphBuilderUtils';
+import { selectCanvasOutputFields, selectPresetModifiedPrompts } from 'features/nodes/util/graph/graphBuilderUtils';
 import type { GraphBuilderArg, GraphBuilderReturn } from 'features/nodes/util/graph/types';
 import { UnsupportedGenerationModeError } from 'features/nodes/util/graph/types';
 import { assert } from 'tsafe';
@@ -47,6 +47,7 @@ export const buildGeminiGraph = (arg: GraphBuilderArg): GraphBuilderReturn => {
   });
 
   // Set the output node
+  g.updateNode(geminiNode, selectCanvasOutputFields(state));
   g.setMetadataReceivingNode(geminiNode);
 
   return {

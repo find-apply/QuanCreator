@@ -481,7 +481,7 @@ class ModelInstallService(ModelInstallServiceBase):
 
         if Path(source_stripped).exists():  # A local file or directory
             source_obj = LocalModelSource(path=Path(source_stripped))
-        elif source_stripped == "invokeai/gemini-2-5-flash":
+        elif source_stripped == "invokeai/gemini-2-5-flash" or source_stripped == "invokeai/gemini-3-pro":
             source_obj = APIModelSource(source=source_stripped)
         elif match := re.match(hf_repoid_re, source):
             source_obj = HFModelSource(
@@ -644,6 +644,22 @@ class ModelInstallService(ModelInstallServiceBase):
                 path="invokeai/gemini-2-5-flash",
                 description="Google's Gemini 2.5 Flash Image Generation model (API).",
                 source="invokeai/gemini-2-5-flash",
+                source_type=ModelSourceType.API,
+                hash="N/A",
+                file_size=0,
+            )
+
+        if str(model_path) == "invokeai/gemini-3-pro":
+            from invokeai.backend.model_manager.configs.external_api import Gemini3_Pro_Config
+            return Gemini3_Pro_Config(
+                key="gemini_3_pro",
+                name="Gemini 3 Pro",
+                base=BaseModelType.Any,
+                type=ModelType.Main,
+                format=ModelFormat.API,
+                path="invokeai/gemini-3-pro",
+                description="Google's Gemini 3 Pro model (API).",
+                source="invokeai/gemini-3-pro",
                 source_type=ModelSourceType.API,
                 hash="N/A",
                 file_size=0,
