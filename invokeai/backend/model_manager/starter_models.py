@@ -690,9 +690,21 @@ flux_fill = StarterModel(
 )
 # endregion
 
+# region Gemini
+gemini_2_5_flash = StarterModel(
+    name="Gemini 2.5 Flash Image Gen",
+    base=BaseModelType.Any,
+    source="invokeai/gemini-2-5-flash",
+    description="Google's Gemini 2.5 Flash Image Generation model (API).",
+    type=ModelType.Main,
+    format=ModelFormat.API,
+)
+# endregion
+
 # List of starter models, displayed on the frontend.
 # The order/sort of this list is not changed by the frontend - set it how you want it here.
 STARTER_MODELS: list[StarterModel] = [
+    gemini_2_5_flash,
     flux_kontext_quantized,
     flux_schnell_quantized,
     flux_dev_quantized,

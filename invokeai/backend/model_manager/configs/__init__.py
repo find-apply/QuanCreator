@@ -1,0 +1,1 @@
+from invokeai.backend.model_manager.configs.external_api import Gemini2_5_Config

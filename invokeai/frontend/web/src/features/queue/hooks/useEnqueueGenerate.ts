@@ -8,6 +8,7 @@ import { positivePromptAddedToHistory, selectPositivePrompt } from 'features/con
 import { prepareLinearUIBatch } from 'features/nodes/util/graph/buildLinearBatchConfig';
 import { buildCogView4Graph } from 'features/nodes/util/graph/generation/buildCogView4Graph';
 import { buildFLUXGraph } from 'features/nodes/util/graph/generation/buildFLUXGraph';
+import { buildGeminiGraph } from 'features/nodes/util/graph/generation/buildGeminiGraph';
 import { buildSD1Graph } from 'features/nodes/util/graph/generation/buildSD1Graph';
 import { buildSD3Graph } from 'features/nodes/util/graph/generation/buildSD3Graph';
 import { buildSDXLGraph } from 'features/nodes/util/graph/generation/buildSDXLGraph';
@@ -48,6 +49,8 @@ const enqueueGenerate = async (store: AppStore, prepend: boolean) => {
         return await buildFLUXGraph(graphBuilderArg);
       case 'cogview4':
         return await buildCogView4Graph(graphBuilderArg);
+      case 'any':
+        return await buildGeminiGraph(graphBuilderArg);
       default:
         assert(false, `No graph builders for base ${base}`);
     }

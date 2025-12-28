@@ -23,7 +23,14 @@ type Props = {
 export const ModelView = memo(({ modelConfig }: Props) => {
   const { t } = useTranslation();
 
+  const isAPIModel = modelConfig.format === 'api';
+
   const withSettings = useMemo(() => {
+    // API models don't have local settings
+    if (isAPIModel) {
+      return false;
+    }
+    
     if (modelConfig.type === 'main' && modelConfig.base !== 'sdxl-refiner') {
       return true;
     }
@@ -39,16 +46,16 @@ export const ModelView = memo(({ modelConfig }: Props) => {
     }
 
     return false;
-  }, [modelConfig.base, modelConfig.type]);
+  }, [modelConfig.base, modelConfig.type, isAPIModel]);
 
   return (
     <Flex flexDir="column" gap={4} h="full">
       <ModelHeader modelConfig={modelConfig}>
-        <ModelReidentifyButton modelConfig={modelConfig} />
+        {!isAPIModel && <ModelReidentifyButton modelConfig={modelConfig} />}
         {modelConfig.format === 'checkpoint' && modelConfig.type === 'main' && (
           <ModelConvertButton modelConfig={modelConfig} />
         )}
-        <ModelEditButton />
+        {!isAPIModel && <ModelEditButton />}
         <ModelDeleteButton modelConfig={modelConfig} />
       </ModelHeader>
       <Divider />
@@ -58,8 +65,15 @@ export const ModelView = memo(({ modelConfig }: Props) => {
             <ModelAttrView label={t('modelManager.baseModel')} value={modelConfig.base} />
             <ModelAttrView label={t('modelManager.modelType')} value={modelConfig.type} />
             <ModelAttrView label={t('modelManager.modelFormat')} value={modelConfig.format} />
-            <ModelAttrView label={t('modelManager.path')} value={modelConfig.path} />
-            <ModelAttrView label={t('modelManager.fileSize')} value={filesize(modelConfig.file_size)} />
+            {modelConfig.format !== 'api' && (
+              <>
+                <ModelAttrView label={t('modelManager.path')} value={modelConfig.path} />
+                <ModelAttrView label={t('modelManager.fileSize')} value={filesize(modelConfig.file_size)} />
+              </>
+            )}
+            {modelConfig.format === 'api' && (
+              <ModelAttrView label={t('modelManager.source')} value={modelConfig.source} />
+            )}
             {modelConfig.type === 'main' && 'variant' in modelConfig && (
               <ModelAttrView label={t('modelManager.variant')} value={modelConfig.variant} />
             )}
@@ -99,10 +113,14 @@ export const ModelView = memo(({ modelConfig }: Props) => {
             </Box>
           </>
         )}
-        <Divider />
-        <Box overflowY="auto">
-          <RelatedModels modelConfig={modelConfig} />
-        </Box>
+        {!isAPIModel && (
+          <>
+            <Divider />
+            <Box overflowY="auto">
+              <RelatedModels modelConfig={modelConfig} />
+            </Box>
+          </>
+        )}
       </Flex>
     </Flex>
   );

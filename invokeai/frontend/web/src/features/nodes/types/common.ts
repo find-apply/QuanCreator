@@ -134,6 +134,7 @@ export const zModelFormat = z.enum([
   'bnb_quantized_nf4b',
   'gguf_quantized',
   'unknown',
+  'api',
 ]);
 export type ModelFormat = z.infer<typeof zModelFormat>;
 

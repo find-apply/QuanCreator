@@ -21,6 +21,7 @@ const FORMAT_NAME_MAP: Record<ModelFormat, string> = {
   unknown: 'unknown',
   olive: 'olive',
   onnx: 'onnx',
+  api: 'api',
 };
 
 const FORMAT_COLOR_MAP: Record<ModelFormat, string> = {
@@ -38,6 +39,7 @@ const FORMAT_COLOR_MAP: Record<ModelFormat, string> = {
   unknown: 'red',
   olive: 'base',
   onnx: 'base',
+  api: 'blue',
 };
 
 const ModelFormatBadge = ({ format }: Props) => {

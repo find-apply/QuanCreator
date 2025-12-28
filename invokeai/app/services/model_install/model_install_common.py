@@ -125,12 +125,23 @@ class URLModelSource(StringLikeSource):
         return str(self.url)
 
 
-ModelSource = Annotated[Union[LocalModelSource, HFModelSource, URLModelSource], Field(discriminator="type")]
+class APIModelSource(StringLikeSource):
+    """A source for API-based models."""
+
+    source: str
+    type: Literal["api"] = "api"
+
+    def __str__(self) -> str:
+        return self.source
+
+
+ModelSource = Annotated[Union[LocalModelSource, HFModelSource, URLModelSource, APIModelSource], Field(discriminator="type")]
 
 MODEL_SOURCE_TO_TYPE_MAP = {
     URLModelSource: ModelSourceType.Url,
     HFModelSource: ModelSourceType.HFRepoID,
     LocalModelSource: ModelSourceType.Path,
+    APIModelSource: ModelSourceType.API,
 }
 
 

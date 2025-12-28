@@ -25,6 +25,7 @@ from invokeai.app.services.invoker import Invoker
 from invokeai.app.services.model_install.model_install_base import ModelInstallServiceBase
 from invokeai.app.services.model_install.model_install_common import (
     MODEL_SOURCE_TO_TYPE_MAP,
+    APIModelSource,
     HFModelSource,
     InstallStatus,
     InvalidModelConfigException,
@@ -51,7 +52,13 @@ from invokeai.backend.model_manager.metadata import (
 )
 from invokeai.backend.model_manager.metadata.metadata_base import HuggingFaceMetadata
 from invokeai.backend.model_manager.search import ModelSearch
-from invokeai.backend.model_manager.taxonomy import ModelRepoVariant, ModelSourceType
+from invokeai.backend.model_manager.taxonomy import (
+    BaseModelType,
+    ModelFormat,
+    ModelRepoVariant,
+    ModelSourceType,
+    ModelType,
+)
 from invokeai.backend.model_manager.util.lora_metadata_extractor import apply_lora_metadata
 from invokeai.backend.util import InvokeAILogger
 from invokeai.backend.util.catch_sigint import catch_sigint
@@ -184,7 +191,8 @@ class ModelInstallService(ModelInstallServiceBase):
         config = config or ModelRecordChanges()
         if not config.source:
             config.source = model_path.resolve().as_posix()
-        config.source_type = ModelSourceType.Path
+        if not config.source_type:
+            config.source_type = ModelSourceType.Path
         return self._register(model_path, config)
 
     def install_path(
@@ -247,6 +255,9 @@ class ModelInstallService(ModelInstallServiceBase):
             self._put_in_queue(install_job)  # synchronously install
         elif isinstance(source, HFModelSource):
             install_job = self._import_from_hf(source, config)
+        elif isinstance(source, APIModelSource):
+            install_job = self._import_api_model(source, config)
+            self._put_in_queue(install_job)
         elif isinstance(source, URLModelSource):
             install_job = self._import_from_url(source, config)
         else:
@@ -470,6 +481,8 @@ class ModelInstallService(ModelInstallServiceBase):
 
         if Path(source_stripped).exists():  # A local file or directory
             source_obj = LocalModelSource(path=Path(source_stripped))
+        elif source_stripped == "invokeai/gemini-2-5-flash":
+            source_obj = APIModelSource(source=source_stripped)
         elif match := re.match(hf_repoid_re, source):
             source_obj = HFModelSource(
                 repo_id=match.group(1),
@@ -528,8 +541,10 @@ class ModelInstallService(ModelInstallServiceBase):
 
     def _register_or_install(self, job: ModelInstallJob) -> None:
         # local jobs will be in waiting state, remote jobs will be downloading state
-        job.total_bytes = self._stat_size(job.local_path)
-        job.bytes = job.total_bytes
+        if not isinstance(job.source, APIModelSource):
+            job.total_bytes = self._stat_size(job.local_path)
+            job.bytes = job.total_bytes
+        
         self._signal_job_running(job)
         job.config_in.source = str(job.source)
         job.config_in.source_type = MODEL_SOURCE_TO_TYPE_MAP[job.source.__class__]
@@ -618,6 +633,22 @@ class ModelInstallService(ModelInstallServiceBase):
         hash_algo = self._app_config.hashing_algorithm
         fields = config.model_dump()
 
+        if str(model_path) == "invokeai/gemini-2-5-flash":
+            from invokeai.backend.model_manager.configs.external_api import Gemini2_5_Config
+            return Gemini2_5_Config(
+                key="gemini_2_5_flash",
+                name="Gemini 2.5 Flash Image Gen",
+                base=BaseModelType.Any,
+                type=ModelType.Main,
+                format=ModelFormat.API,
+                path="invokeai/gemini-2-5-flash",
+                description="Google's Gemini 2.5 Flash Image Generation model (API).",
+                source="invokeai/gemini-2-5-flash",
+                source_type=ModelSourceType.API,
+                hash="N/A",
+                file_size=0,
+            )
+
         result = ModelConfigFactory.from_model_on_disk(
             mod=model_path,
             override_fields=deepcopy(fields),
@@ -644,11 +675,13 @@ class ModelInstallService(ModelInstallServiceBase):
         model_images_path = self.app_config.models_path / "model_images"
         apply_lora_metadata(info, model_path.resolve(), model_images_path)
 
-        model_path = model_path.resolve()
+        # For API models, we don't resolve the path as it's not a real file
+        if info.format != ModelFormat.API:
+            model_path = model_path.resolve()
 
-        # Models in the Invoke-managed models dir should use relative paths.
-        if model_path.is_relative_to(self.app_config.models_path):
-            model_path = model_path.relative_to(self.app_config.models_path)
+            # Models in the Invoke-managed models dir should use relative paths.
+            if model_path.is_relative_to(self.app_config.models_path):
+                model_path = model_path.relative_to(self.app_config.models_path)
 
         info.path = model_path.as_posix()
 
@@ -682,6 +715,18 @@ class ModelInstallService(ModelInstallServiceBase):
             config_in=config or ModelRecordChanges(),
             local_path=Path(source.path),
             inplace=source.inplace or False,
+        )
+
+    def _import_api_model(
+        self, source: APIModelSource, config: Optional[ModelRecordChanges] = None
+    ) -> ModelInstallJob:
+        # API models don't have a local path in the traditional sense, but we use the source string as a placeholder
+        return ModelInstallJob(
+            id=self._next_id(),
+            source=source,
+            config_in=config or ModelRecordChanges(),
+            local_path=Path(source.source),
+            inplace=True, # API models are always "inplace" as there's nothing to move
         )
 
     def _import_from_hf(

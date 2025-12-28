@@ -129,6 +129,7 @@ class ModelFormat(str, Enum):
     BnbQuantizedLlmInt8b = "bnb_quantized_int8b"
     BnbQuantizednf4b = "bnb_quantized_nf4b"
     GGUFQuantized = "gguf_quantized"
+    API = "api"
     Unknown = "unknown"
 
 
@@ -157,6 +158,7 @@ class ModelSourceType(str, Enum):
     Path = "path"
     Url = "url"
     HFRepoID = "hf_repo_id"
+    API = "api"
 
 
 class FluxLoRAFormat(str, Enum):

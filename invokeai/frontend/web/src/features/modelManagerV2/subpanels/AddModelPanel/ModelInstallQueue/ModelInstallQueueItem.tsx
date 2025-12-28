@@ -52,30 +52,43 @@ export const ModelInstallQueueItem = memo((props: ModelListItemProps) => {
   }, [deleteImportModel, installJob]);
 
   const sourceLocation = useMemo(() => {
-    switch (installJob.source.type) {
+    const source = installJob.source as { type: string; repo_id?: string; url?: string; path?: string; source?: string };
+    switch (source.type) {
       case 'hf':
-        return installJob.source.repo_id;
+        return source.repo_id ?? t('common.unknown');
       case 'url':
-        return installJob.source.url;
+        return source.url ?? t('common.unknown');
       case 'local':
-        return installJob.source.path;
+        return source.path ?? t('common.unknown');
+      case 'api':
+        return source.source ?? t('common.unknown');
       default:
-        return t('common.unknown');
+        // Handle unknown source types gracefully
+        return source.source ?? source.path ?? source.repo_id ?? source.url ?? t('common.unknown');
     }
   }, [installJob.source]);
 
   const modelName = useMemo(() => {
-    switch (installJob.source.type) {
-      case 'hf':
-        return installJob.source.repo_id;
-      case 'url':
-        return installJob.source.url.split('/').slice(-1)[0] ?? t('common.unknown');
-      case 'local':
-        return installJob.source.path.split('\\').slice(-1)[0] ?? t('common.unknown');
-      default:
-        return t('common.unknown');
+    // First, try to get the name from config_in if available
+    if (installJob.config_in?.name) {
+      return installJob.config_in.name;
     }
-  }, [installJob.source]);
+    
+    const source = installJob.source as { type: string; repo_id?: string; url?: string; path?: string; source?: string };
+    switch (source.type) {
+      case 'hf':
+        return source.repo_id ?? t('common.unknown');
+      case 'url':
+        return source.url?.split('/').slice(-1)[0] ?? t('common.unknown');
+      case 'local':
+        return source.path?.split('\\').slice(-1)[0] ?? t('common.unknown');
+      case 'api':
+        return source.source?.split('/').slice(-1)[0] ?? t('common.unknown');
+      default:
+        // Handle unknown source types gracefully
+        return source.source?.split('/').slice(-1)[0] ?? source.path?.split('/').slice(-1)[0] ?? t('common.unknown');
+    }
+  }, [installJob.source, installJob.config_in]);
 
   const progressValue = useMemo(() => {
     if (installJob.status === 'completed' || installJob.status === 'error' || installJob.status === 'cancelled') {

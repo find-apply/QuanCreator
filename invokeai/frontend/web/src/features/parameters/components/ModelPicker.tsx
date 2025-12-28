@@ -34,6 +34,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { PiCaretDownBold, PiLinkSimple } from 'react-icons/pi';
 import { useGetRelatedModelIdsBatchQuery } from 'services/api/endpoints/modelRelationships';
 import type { AnyModelConfig } from 'services/api/types';
+import { isAPIModelConfig } from 'services/api/types';
 
 const selectSelectedModelKeys = createMemoizedSelector(selectParamsSlice, selectLoRAsSlice, (params, loras) => {
   const keys: string[] = [];
@@ -397,6 +398,21 @@ const PickerOptionComponent = typedMemo(
             <Text className="picker-option" sx={optionNameSx} data-is-compact={isCompactView}>
               {option.name}
             </Text>
+            {isAPIModelConfig(option) && (
+              <Text
+                className="extra-info"
+                fontSize="xs"
+                fontWeight="bold"
+                color="blue.300"
+                bg="blue.900"
+                px={1.5}
+                py={0.5}
+                borderRadius="sm"
+                flexShrink={0}
+              >
+                API
+              </Text>
+            )}
             <Spacer />
             {option.file_size > 0 && (
               <Text

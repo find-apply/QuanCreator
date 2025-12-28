@@ -25,6 +25,7 @@ from invokeai.backend.model_manager.configs.controlnet import (
     ControlNet_Diffusers_SD2_Config,
     ControlNet_Diffusers_SDXL_Config,
 )
+from invokeai.backend.model_manager.configs.external_api import Gemini2_5_Config
 from invokeai.backend.model_manager.configs.flux_redux import FLUXRedux_Checkpoint_Config
 from invokeai.backend.model_manager.configs.identification_utils import NotAMatchError
 from invokeai.backend.model_manager.configs.ip_adapter import (
@@ -211,6 +212,8 @@ AnyModelConfig = Annotated[
         Annotated[SigLIP_Diffusers_Config, SigLIP_Diffusers_Config.get_tag()],
         Annotated[FLUXRedux_Checkpoint_Config, FLUXRedux_Checkpoint_Config.get_tag()],
         Annotated[LlavaOnevision_Diffusers_Config, LlavaOnevision_Diffusers_Config.get_tag()],
+        # API models
+        Annotated[Gemini2_5_Config, Gemini2_5_Config.get_tag()],
         # Unknown model (fallback)
         Annotated[Unknown_Config, Unknown_Config.get_tag()],
     ],

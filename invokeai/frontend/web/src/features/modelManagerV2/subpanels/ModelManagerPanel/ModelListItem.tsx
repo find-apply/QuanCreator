@@ -123,9 +123,25 @@ const ModelListItem = ({ model }: ModelListItemProps) => {
             <Text fontWeight="semibold" noOfLines={1} wordBreak="break-all">
               {model.name}
             </Text>
-            <Text variant="subtext" fontStyle="italic">
-              {filesize(model.file_size)}
-            </Text>
+            {model.file_size > 0 && (
+              <Text variant="subtext" fontStyle="italic">
+                {filesize(model.file_size)}
+              </Text>
+            )}
+            {model.format === 'api' && (
+              <Text
+                fontSize="xs"
+                fontWeight="bold"
+                color="blue.300"
+                bg="blue.900"
+                px={1.5}
+                py={0.5}
+                borderRadius="sm"
+                flexShrink={0}
+              >
+                API
+              </Text>
+            )}
             <Spacer />
           </Flex>
           <Text variant="subtext" noOfLines={1}>

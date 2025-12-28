@@ -143,7 +143,11 @@ const checkSubmodels = (identifiers: string[], config: AnyModelConfig): boolean 
 };
 
 export const isLoRAModelConfig = (config: AnyModelConfig): config is LoRAModelConfig => {
-  return config.type === 'lora';
+  return config.type === 'lora' && config.format !== 'api';
+};
+
+export const isAPIModelConfig = (config: AnyModelConfig): boolean => {
+  return config.format === 'api';
 };
 
 export const isControlLoRAModelConfig = (config: AnyModelConfig): config is ControlLoRAModelConfig => {

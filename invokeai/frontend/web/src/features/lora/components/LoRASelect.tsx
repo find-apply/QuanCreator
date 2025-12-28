@@ -24,12 +24,12 @@ const LoRASelect = () => {
 
   const currentBaseModel = useAppSelector(selectBase);
 
-  // Filter to only show compatible LoRAs
+  // Filter to only show compatible LoRAs (exclude API models)
   const compatibleLoRAs = useMemo(() => {
     if (!currentBaseModel) {
       return EMPTY_ARRAY;
     }
-    return modelConfigs.filter((model) => model.base === currentBaseModel);
+    return modelConfigs.filter((model) => model.base === currentBaseModel && model.format !== 'api');
   }, [modelConfigs, currentBaseModel]);
 
   const getIsDisabled = useCallback(
