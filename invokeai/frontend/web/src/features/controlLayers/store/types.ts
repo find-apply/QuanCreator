@@ -23,6 +23,7 @@ import {
   zParameterStrength,
   zParameterT5EncoderModel,
   zParameterVAEModel,
+  zParameterGeminiPersonGeneration,
 } from 'features/parameters/types/parameterSchemas';
 import type { JsonObject } from 'type-fest';
 import { z } from 'zod';
@@ -581,7 +582,7 @@ export const zParamsState = z.object({
   guidance: zParameterGuidance,
   img2imgStrength: zParameterStrength,
   optimizedDenoisingEnabled: z.boolean(),
-  iterations: z.number(),
+  iterations: 1,
   scheduler: zParameterScheduler,
   upscaleScheduler: zParameterScheduler,
   upscaleCfgScale: zParameterCFGScale,
@@ -590,29 +591,30 @@ export const zParamsState = z.object({
   steps: zParameterSteps,
   model: zParameterModel.nullable(),
   vae: zParameterVAEModel.nullable(),
-  vaePrecision: zParameterPrecision,
+  vaePrecision: 'fp32',
   fluxVAE: zParameterVAEModel.nullable(),
   seamlessXAxis: z.boolean(),
   seamlessYAxis: z.boolean(),
-  clipSkip: z.number(),
-  shouldUseCpuNoise: z.boolean(),
-  colorCompensation: z.boolean(),
+  clipSkip: 0,
+  shouldUseCpuNoise: true,
+  colorCompensation: false,
   positivePrompt: zParameterPositivePrompt,
   positivePromptHistory: zPositivePromptHistory,
   negativePrompt: zParameterNegativePrompt,
   refinerModel: zParameterSDXLRefinerModel.nullable(),
-  refinerSteps: z.number(),
-  refinerCFGScale: z.number(),
-  refinerScheduler: zParameterScheduler,
-  refinerPositiveAestheticScore: z.number(),
-  refinerNegativeAestheticScore: z.number(),
-  refinerStart: z.number(),
-  t5EncoderModel: zParameterT5EncoderModel.nullable(),
+  refinerSteps: 20,
+  refinerCFGScale: 7.5,
+  refinerScheduler: 'euler',
+  refinerPositiveAestheticScore: 6,
+  refinerNegativeAestheticScore: 2.5,
+  refinerStart: 0.8,
+  t5EncoderModel: null,
   clipEmbedModel: zParameterCLIPEmbedModel.nullable(),
   clipLEmbedModel: zParameterCLIPLEmbedModel.nullable(),
   clipGEmbedModel: zParameterCLIPGEmbedModel.nullable(),
   controlLora: zParameterControlLoRAModel.nullable(),
   dimensions: zDimensionsState,
+  geminiPersonGeneration: zParameterGeminiPersonGeneration,
 });
 export type ParamsState = z.infer<typeof zParamsState>;
 export const getInitialParamsState = (): ParamsState => ({
@@ -667,6 +669,7 @@ export const getInitialParamsState = (): ParamsState => ({
     height: 512,
     aspectRatio: deepClone(DEFAULT_ASPECT_RATIO_CONFIG),
   },
+  geminiPersonGeneration: 'allow_adult',
 });
 
 const zInpaintMasks = z.object({
@@ -752,11 +755,11 @@ export type EntityIdentifierPayload<
   U extends CanvasEntityType = CanvasEntityType,
 > = T extends void
   ? {
-      entityIdentifier: CanvasEntityIdentifier<U>;
-    }
+    entityIdentifier: CanvasEntityIdentifier<U>;
+  }
   : {
-      entityIdentifier: CanvasEntityIdentifier<U>;
-    } & T;
+    entityIdentifier: CanvasEntityIdentifier<U>;
+  } & T;
 
 export type EntityMovedToPayload = EntityIdentifierPayload<{ position: Coordinate }>;
 export type EntityMovedByPayload = EntityIdentifierPayload<{ offset: Coordinate }>;

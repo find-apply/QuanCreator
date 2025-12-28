@@ -207,3 +207,17 @@ export type ParameterLoRAWeight = z.infer<typeof zLoRAWeight>;
 export const [zParameterCLIPSkip, isParameterCLIPSkip] = buildParameter(z.number().int().min(0));
 export type ParameterCLIPSkip = z.infer<typeof zParameterCLIPSkip>;
 // #endregion
+
+// #region Gemini Aspect Ratio
+export const [zParameterGeminiAspectRatio, isParameterGeminiAspectRatio] = buildParameter(
+  z.enum(['1:1', '3:4', '4:3', '9:16', '16:9'])
+);
+export type ParameterGeminiAspectRatio = z.infer<typeof zParameterGeminiAspectRatio>;
+// #endregion
+
+// #region Gemini Person Generation
+export const [zParameterGeminiPersonGeneration, isParameterGeminiPersonGeneration] = buildParameter(
+  z.enum(['dont_allow', 'allow_adult', 'allow_all'])
+);
+export type ParameterGeminiPersonGeneration = z.infer<typeof zParameterGeminiPersonGeneration>;
+// #endregion

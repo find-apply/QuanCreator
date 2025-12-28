@@ -13,6 +13,7 @@ import {
   getInitialParamsState,
   MAX_POSITIVE_PROMPT_HISTORY,
   zParamsState,
+  zParameterGeminiPersonGeneration,
 } from 'features/controlLayers/store/types';
 import { calculateNewSize } from 'features/controlLayers/util/getScaledBoundingBoxDimensions';
 import {
@@ -36,6 +37,7 @@ import type {
   ParameterPrecision,
   ParameterScheduler,
   ParameterSDXLRefinerModel,
+  ParameterT5EncoderModel,
   ParameterT5EncoderModel,
   ParameterVAEModel,
 } from 'features/parameters/types/parameterSchemas';
@@ -435,6 +437,7 @@ export const {
   vaePrecisionChanged,
   t5EncoderModelSelected,
   clipEmbedModelSelected,
+  setGeminiPersonGeneration,
   clipLEmbedModelSelected,
   clipGEmbedModelSelected,
   setClipSkip,
@@ -579,6 +582,7 @@ export const selectRefinerNegativeAestheticScore = createParamsSelector(
 export const selectRefinerScheduler = createParamsSelector((params) => params.refinerScheduler);
 export const selectRefinerStart = createParamsSelector((params) => params.refinerStart);
 export const selectRefinerSteps = createParamsSelector((params) => params.refinerSteps);
+export const selectGeminiPersonGeneration = createParamsSelector((params) => params.geminiPersonGeneration);
 
 export const selectWidth = createParamsSelector((params) => params.dimensions.width);
 export const selectHeight = createParamsSelector((params) => params.dimensions.height);

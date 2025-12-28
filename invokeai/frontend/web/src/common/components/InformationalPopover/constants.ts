@@ -24,6 +24,8 @@ export type Feature =
   | 'dynamicPromptsMaxPrompts'
   | 'dynamicPromptsSeedBehaviour'
   | 'globalReferenceImage'
+  | 'geminiAspectRatio'
+  | 'geminiPersonGeneration'
   | 'imageFit'
   | 'infillMethod'
   | 'inpainting'

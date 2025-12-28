@@ -1,6 +1,11 @@
 import { logger } from 'app/logging/logger';
 import { getPrefixedId } from 'features/controlLayers/konva/util';
-import { selectMainModelConfig } from 'features/controlLayers/store/paramsSlice';
+import {
+  selectGeminiPersonGeneration,
+  selectHeight,
+  selectMainModelConfig,
+  selectWidth,
+} from 'features/controlLayers/store/paramsSlice';
 import { Graph } from 'features/nodes/util/graph/generation/Graph';
 import { selectCanvasOutputFields, selectPresetModifiedPrompts } from 'features/nodes/util/graph/graphBuilderUtils';
 import type { GraphBuilderArg, GraphBuilderReturn } from 'features/nodes/util/graph/types';
@@ -39,11 +44,17 @@ export const buildGeminiGraph = (arg: GraphBuilderArg): GraphBuilderReturn => {
   }
 
   // Create the Gemini image generation node
+  const width = selectWidth(state);
+  const height = selectHeight(state);
+  const geminiAspectRatio = getClosestGeminiAspectRatio(width, height);
+
   const geminiNode = g.addNode({
     type: nodeType,
     id: getPrefixedId('gemini_gen'),
     prompt: prompts.positive,
     model: model,
+    aspect_ratio: geminiAspectRatio,
+    person_generation: selectGeminiPersonGeneration(state),
   });
 
   // Set the output node
@@ -54,4 +65,28 @@ export const buildGeminiGraph = (arg: GraphBuilderArg): GraphBuilderReturn => {
     g,
     positivePrompt,
   };
+};
+
+const GEMINI_ASPECT_RATIOS: { [key: string]: number } = {
+  '1:1': 1,
+  '3:4': 3 / 4,
+  '4:3': 4 / 3,
+  '9:16': 9 / 16,
+  '16:9': 16 / 9,
+};
+
+const getClosestGeminiAspectRatio = (width: number, height: number): string => {
+  const targetRatio = width / height;
+  let closestRatio = '1:1';
+  let minDiff = Infinity;
+
+  for (const [ratioString, ratioValue] of Object.entries(GEMINI_ASPECT_RATIOS)) {
+    const diff = Math.abs(targetRatio - ratioValue);
+    if (diff < minDiff) {
+      minDiff = diff;
+      closestRatio = ratioString;
+    }
+  }
+
+  return closestRatio;
 };

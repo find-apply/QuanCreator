@@ -117,6 +117,14 @@ class Gemini3ProImageGenInvocation(BaseInvocation, WithMetadata):
         description="The Gemini 3 Pro model to use",
         ui_type=UIType.Gemini3ProModel,
     )
+    aspect_ratio: Literal["1:1", "3:4", "4:3", "9:16", "16:9"] = InputField(
+        default="1:1",
+        description="The aspect ratio of the generated image",
+    )
+    person_generation: Literal["dont_allow", "allow_adult", "allow_all"] = InputField(
+        default="allow_adult",
+        description="Filter setting for person generation",
+    )
     
     def invoke(self, context: InvocationContext) -> ImageOutput:
         # Try to load .env from the project root
@@ -137,7 +145,9 @@ class Gemini3ProImageGenInvocation(BaseInvocation, WithMetadata):
                 }
             ],
             "parameters": {
-                "sampleCount": 1
+                "sampleCount": 1,
+                "aspectRatio": self.aspect_ratio,
+                "personGeneration": self.person_generation
             }
         }
 

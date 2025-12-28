@@ -19,6 +19,8 @@ import { useTranslation } from 'react-i18next';
 import { useSelectedModelConfig } from 'services/api/hooks/useSelectedModelConfig';
 import { isFluxFillMainModelModelConfig } from 'services/api/types';
 
+import GeminiSettings from '../GeminiSettings/GeminiSettings';
+
 const formLabelProps: FormLabelProps = {
   minW: '4rem',
 };
@@ -71,6 +73,7 @@ export const GenerationSettingsAccordion = memo(() => {
               {!isAPIModel && <ParamSteps />}
               {isFLUX && modelConfig && !isFluxFillMainModelModelConfig(modelConfig) && <ParamGuidance />}
               {!isFLUX && !isAPIModel && <ParamCFGScale />}
+              {isAPIModel && <GeminiSettings />}
             </FormControlGroup>
           </Flex>
         </Expander>
