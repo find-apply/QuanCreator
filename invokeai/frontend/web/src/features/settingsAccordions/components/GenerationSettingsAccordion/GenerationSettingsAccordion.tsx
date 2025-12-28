@@ -4,7 +4,7 @@ import { EMPTY_ARRAY } from 'app/store/constants';
 import { createMemoizedSelector } from 'app/store/createMemoizedSelector';
 import { useAppSelector } from 'app/store/storeHooks';
 import { selectLoRAsSlice } from 'features/controlLayers/store/lorasSlice';
-import { selectIsCogView4, selectIsFLUX, selectIsSD3 } from 'features/controlLayers/store/paramsSlice';
+import { selectIsAPIModel, selectIsCogView4, selectIsFLUX, selectIsSD3 } from 'features/controlLayers/store/paramsSlice';
 import { LoRAList } from 'features/lora/components/LoRAList';
 import LoRASelect from 'features/lora/components/LoRASelect';
 import ParamCFGScale from 'features/parameters/components/Core/ParamCFGScale';
@@ -29,6 +29,7 @@ export const GenerationSettingsAccordion = memo(() => {
   const isFLUX = useAppSelector(selectIsFLUX);
   const isSD3 = useAppSelector(selectIsSD3);
   const isCogView4 = useAppSelector(selectIsCogView4);
+  const isAPIModel = useAppSelector(selectIsAPIModel);
 
   const selectBadges = useMemo(
     () =>
@@ -66,10 +67,10 @@ export const GenerationSettingsAccordion = memo(() => {
         <Expander label={t('accordions.advanced.options')} isOpen={isOpenExpander} onToggle={onToggleExpander}>
           <Flex gap={4} flexDir="column" pb={4}>
             <FormControlGroup formLabelProps={formLabelProps}>
-              {!isFLUX && !isSD3 && !isCogView4 && <ParamScheduler />}
-              <ParamSteps />
+              {!isFLUX && !isSD3 && !isCogView4 && !isAPIModel && <ParamScheduler />}
+              {!isAPIModel && <ParamSteps />}
               {isFLUX && modelConfig && !isFluxFillMainModelModelConfig(modelConfig) && <ParamGuidance />}
-              {!isFLUX && <ParamCFGScale />}
+              {!isFLUX && !isAPIModel && <ParamCFGScale />}
             </FormControlGroup>
           </Flex>
         </Expander>

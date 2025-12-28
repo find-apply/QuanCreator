@@ -32,11 +32,18 @@ export const buildGeminiGraph = (arg: GraphBuilderArg): GraphBuilderReturn => {
     type: 'string',
   });
 
+  // Determine the node type based on the model
+  let nodeType: 'gemini_2_5_flash_image_gen' | 'gemini_3_pro_image_gen' = 'gemini_2_5_flash_image_gen';
+  if (model.name.includes('Gemini 3 Pro')) {
+    nodeType = 'gemini_3_pro_image_gen';
+  }
+
   // Create the Gemini image generation node
   const geminiNode = g.addNode({
-    type: 'gemini_2_5_flash_image_gen',
+    type: nodeType,
     id: getPrefixedId('gemini_gen'),
     prompt: prompts.positive,
+    model: model,
   });
 
   // Set the output node

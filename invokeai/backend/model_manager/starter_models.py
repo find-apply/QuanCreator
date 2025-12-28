@@ -699,11 +699,21 @@ gemini_2_5_flash = StarterModel(
     type=ModelType.Main,
     format=ModelFormat.API,
 )
+
+gemini_3_pro = StarterModel(
+    name="Gemini 3 Pro",
+    base=BaseModelType.Any,
+    source="invokeai/gemini-3-pro",
+    description="Google's Gemini 3 Pro (API).",
+    type=ModelType.Main,
+    format=ModelFormat.API,
+)
 # endregion
 
 # List of starter models, displayed on the frontend.
 # The order/sort of this list is not changed by the frontend - set it how you want it here.
 STARTER_MODELS: list[StarterModel] = [
+    gemini_3_pro,
     gemini_2_5_flash,
     flux_kontext_quantized,
     flux_schnell_quantized,

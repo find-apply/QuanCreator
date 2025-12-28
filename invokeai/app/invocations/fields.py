@@ -125,6 +125,7 @@ class UIType(str, Enum, metaclass=MetaEnum):
     Imagen4Model = "DEPRECATED_Imagen4ModelField"
     ChatGPT4oModel = "ChatGPT4oModelField"
     Gemini2_5Model = "Gemini2_5ModelField"
+    Gemini3ProModel = "Gemini3ProModelField"
     FluxKontextModel = "DEPRECATED_FluxKontextModelField"
     Veo3Model = "DEPRECATED_Veo3ModelField"
     RunwayModel = "DEPRECATED_RunwayModelField"

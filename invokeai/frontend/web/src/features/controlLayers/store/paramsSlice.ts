@@ -606,3 +606,7 @@ export const selectMainModelConfig = createSelector(
     return modelConfig;
   }
 );
+
+export const selectIsAPIModel = createSelector(selectMainModelConfig, (config) => {
+  return config?.format === 'api';
+});
