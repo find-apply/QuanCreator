@@ -192,3 +192,7 @@ installer/InvokeAI-Installer/
 .aider*
 
 .claude/
+
+# User added ignores
+.env
+invokeai/frontend/web/.env
