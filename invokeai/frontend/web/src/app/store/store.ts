@@ -19,6 +19,7 @@ import { addSocketConnectedEventListener } from 'app/store/middleware/listenerMi
 import { deepClone } from 'common/util/deepClone';
 import { merge } from 'es-toolkit';
 import { omit, pick } from 'es-toolkit/compat';
+import { authSliceConfig } from 'features/auth/store/authSlice';
 import { changeBoardModalSliceConfig } from 'features/changeBoardModal/store/slice';
 import { canvasSettingsSliceConfig } from 'features/controlLayers/store/canvasSettingsSlice';
 import { canvasSliceConfig } from 'features/controlLayers/store/canvasSlice';
@@ -78,6 +79,7 @@ const SLICE_CONFIGS = {
   [upscaleSliceConfig.slice.reducerPath]: upscaleSliceConfig,
   [workflowLibrarySliceConfig.slice.reducerPath]: workflowLibrarySliceConfig,
   [workflowSettingsSliceConfig.slice.reducerPath]: workflowSettingsSliceConfig,
+  [authSliceConfig.slice.reducerPath]: authSliceConfig,
 };
 
 // TS makes it really hard to dynamically create this object :/ so it's just hardcoded here.
@@ -111,6 +113,7 @@ const ALL_REDUCERS = {
   [upscaleSliceConfig.slice.reducerPath]: upscaleSliceConfig.slice.reducer,
   [workflowLibrarySliceConfig.slice.reducerPath]: workflowLibrarySliceConfig.slice.reducer,
   [workflowSettingsSliceConfig.slice.reducerPath]: workflowSettingsSliceConfig.slice.reducer,
+  [authSliceConfig.slice.reducerPath]: authSliceConfig.slice.reducer,
 };
 
 const rootReducer = combineReducers(ALL_REDUCERS);

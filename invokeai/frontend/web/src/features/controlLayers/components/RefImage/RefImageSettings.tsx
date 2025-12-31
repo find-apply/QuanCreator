@@ -91,7 +91,8 @@ const RefImageSettingsContent = memo(() => {
 
   const onChangeModel = useCallback(
     (modelConfig: IPAdapterModelConfig | FLUXReduxModelConfig | ChatGPT4oModelConfig | FLUXKontextModelConfig) => {
-      dispatch(refImageModelChanged({ id, modelConfig }));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      dispatch(refImageModelChanged({ id, modelConfig: modelConfig as any }));
     },
     [dispatch, id]
   );

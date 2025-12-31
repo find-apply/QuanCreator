@@ -4,7 +4,12 @@ import { EMPTY_ARRAY } from 'app/store/constants';
 import { createMemoizedSelector } from 'app/store/createMemoizedSelector';
 import { useAppSelector } from 'app/store/storeHooks';
 import { selectLoRAsSlice } from 'features/controlLayers/store/lorasSlice';
-import { selectIsAPIModel, selectIsCogView4, selectIsFLUX, selectIsSD3 } from 'features/controlLayers/store/paramsSlice';
+import {
+  selectIsAPIModel,
+  selectIsCogView4,
+  selectIsFLUX,
+  selectIsSD3,
+} from 'features/controlLayers/store/paramsSlice';
 import { LoRAList } from 'features/lora/components/LoRAList';
 import LoRASelect from 'features/lora/components/LoRASelect';
 import ParamCFGScale from 'features/parameters/components/Core/ParamCFGScale';

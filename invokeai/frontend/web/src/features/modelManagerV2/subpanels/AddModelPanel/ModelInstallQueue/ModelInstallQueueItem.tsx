@@ -52,7 +52,13 @@ export const ModelInstallQueueItem = memo((props: ModelListItemProps) => {
   }, [deleteImportModel, installJob]);
 
   const sourceLocation = useMemo(() => {
-    const source = installJob.source as { type: string; repo_id?: string; url?: string; path?: string; source?: string };
+    const source = installJob.source as {
+      type: string;
+      repo_id?: string;
+      url?: string;
+      path?: string;
+      source?: string;
+    };
     switch (source.type) {
       case 'hf':
         return source.repo_id ?? t('common.unknown');
@@ -73,8 +79,14 @@ export const ModelInstallQueueItem = memo((props: ModelListItemProps) => {
     if (installJob.config_in?.name) {
       return installJob.config_in.name;
     }
-    
-    const source = installJob.source as { type: string; repo_id?: string; url?: string; path?: string; source?: string };
+
+    const source = installJob.source as {
+      type: string;
+      repo_id?: string;
+      url?: string;
+      path?: string;
+      source?: string;
+    };
     switch (source.type) {
       case 'hf':
         return source.repo_id ?? t('common.unknown');

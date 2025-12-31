@@ -8,7 +8,7 @@ import { TriggerPhrases } from 'features/modelManagerV2/subpanels/ModelPanel/Tri
 import { filesize } from 'filesize';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { AnyModelConfig } from 'services/api/types';
+import type { AnyModelConfig, MainModelConfig } from 'services/api/types';
 
 import { MainModelDefaultSettings } from './MainModelDefaultSettings/MainModelDefaultSettings';
 import { ModelAttrView } from './ModelAttrView';
@@ -30,7 +30,7 @@ export const ModelView = memo(({ modelConfig }: Props) => {
     if (isAPIModel) {
       return false;
     }
-    
+
     if (modelConfig.type === 'main' && modelConfig.base !== 'sdxl-refiner') {
       return true;
     }
@@ -96,7 +96,7 @@ export const ModelView = memo(({ modelConfig }: Props) => {
             <Divider />
             <Box>
               {modelConfig.type === 'main' && modelConfig.base !== 'sdxl-refiner' && (
-                <MainModelDefaultSettings modelConfig={modelConfig} />
+                <MainModelDefaultSettings modelConfig={modelConfig as MainModelConfig} />
               )}
               {(modelConfig.type === 'controlnet' ||
                 modelConfig.type === 't2i_adapter' ||
@@ -109,7 +109,7 @@ export const ModelView = memo(({ modelConfig }: Props) => {
                   <TriggerPhrases modelConfig={modelConfig} />
                 </>
               )}
-              {modelConfig.type === 'main' && <TriggerPhrases modelConfig={modelConfig} />}
+              {modelConfig.type === 'main' && <TriggerPhrases modelConfig={modelConfig as MainModelConfig} />}
             </Box>
           </>
         )}

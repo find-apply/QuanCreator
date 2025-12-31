@@ -135,6 +135,10 @@ export const MODEL_BASE_TO_COLOR: Record<BaseModelType, string> = {
   'sdxl-refiner': 'invokeBlue',
   flux: 'gold',
   cogview4: 'red',
+  imagen3: 'blue',
+  imagen4: 'blue',
+  'chatgpt-4o': 'green',
+  'flux-kontext': 'gold',
   unknown: 'red',
 };
 
@@ -173,6 +177,10 @@ export const MODEL_BASE_TO_LONG_NAME: Record<BaseModelType, string> = {
   'sdxl-refiner': 'Stable Diffusion XL Refiner',
   flux: 'FLUX',
   cogview4: 'CogView4',
+  imagen3: 'Imagen 3',
+  imagen4: 'Imagen 4',
+  'chatgpt-4o': 'ChatGPT 4o',
+  'flux-kontext': 'FLUX Kontext',
   unknown: 'Unknown',
 };
 
@@ -188,6 +196,10 @@ export const MODEL_BASE_TO_SHORT_NAME: Record<BaseModelType, string> = {
   'sdxl-refiner': 'SDXLR',
   flux: 'FLUX',
   cogview4: 'CogView4',
+  imagen3: 'Imagen 3',
+  imagen4: 'Imagen 4',
+  'chatgpt-4o': 'ChatGPT 4o',
+  'flux-kontext': 'FLUX Kontext',
   unknown: 'Unknown',
 };
 
@@ -203,6 +215,7 @@ export const MODEL_VARIANT_TO_LONG_NAME: Record<AnyModelVariant, string> = {
 };
 
 export const MODEL_FORMAT_TO_LONG_NAME: Record<ModelFormat, string> = {
+  api: 'API',
   omi: 'OMI',
   diffusers: 'Diffusers',
   checkpoint: 'Checkpoint',
@@ -219,8 +232,14 @@ export const MODEL_FORMAT_TO_LONG_NAME: Record<ModelFormat, string> = {
   unknown: 'Unknown',
 };
 
-export const SUPPORTS_OPTIMIZED_DENOISING_BASE_MODELS: BaseModelType[] = ['flux', 'sd-3'];
+export const SUPPORTS_OPTIMIZED_DENOISING_BASE_MODELS: (BaseModelType | 'unknown')[] = ['flux', 'sd-3'];
 
-export const SUPPORTS_REF_IMAGES_BASE_MODELS: BaseModelType[] = ['sd-1', 'sdxl', 'flux'];
+export const SUPPORTS_REF_IMAGES_BASE_MODELS: (BaseModelType | 'unknown')[] = ['sd-1', 'sdxl', 'flux'];
 
-export const SUPPORTS_NEGATIVE_PROMPT_BASE_MODELS: BaseModelType[] = ['sd-1', 'sd-2', 'sdxl', 'cogview4', 'sd-3'];
+export const SUPPORTS_NEGATIVE_PROMPT_BASE_MODELS: (BaseModelType | 'unknown')[] = [
+  'sd-1',
+  'sd-2',
+  'sdxl',
+  'cogview4',
+  'sd-3',
+];

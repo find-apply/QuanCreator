@@ -33,10 +33,7 @@ export const appInfoApi = api.injectEndpoints({
       }),
       providesTags: ['FetchOnReconnect'],
     }),
-    getPatchmatchStatus: build.query<
-      paths['/api/v1/app/patchmatch_status']['get']['responses']['200']['content']['application/json'],
-      void
-    >({
+    getPatchmatchStatus: build.query<boolean, void>({
       query: () => ({
         url: buildAppInfoUrl('patchmatch_status'),
         method: 'GET',

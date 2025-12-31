@@ -13,7 +13,7 @@ import { getRegionalGuidanceWarnings } from 'features/controlLayers/store/valida
 import { IMAGE_INFLUENCE_TO_SETTINGS } from 'features/nodes/util/graph/generation/addFLUXRedux';
 import type { Graph } from 'features/nodes/util/graph/generation/Graph';
 import { serializeError } from 'serialize-error';
-import type { Invocation, MainModelConfig } from 'services/api/types';
+import type { Invocation, MainModelConfig, S } from 'services/api/types';
 import { assert } from 'tsafe';
 
 const log = logger('system');
@@ -292,7 +292,7 @@ export const addRegions = async ({
           type: 'ip_adapter',
           weight,
           method,
-          ip_adapter_model: model,
+          ip_adapter_model: model as S['ModelIdentifierField'],
           clip_vision_model: clipVisionModel,
           begin_step_percent: beginEndStepPct[0],
           end_step_percent: beginEndStepPct[1],
@@ -315,7 +315,7 @@ export const addRegions = async ({
         const fluxReduxNode = g.addNode({
           id: `flux_redux_${id}`,
           type: 'flux_redux',
-          redux_model: fluxReduxModel,
+          redux_model: fluxReduxModel as S['ModelIdentifierField'],
           image: {
             image_name: image.image_name,
           },

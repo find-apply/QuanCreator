@@ -2,7 +2,7 @@ import type { FLUXReduxConfig, FLUXReduxImageInfluence, RefImageState } from 'fe
 import { isFLUXReduxConfig } from 'features/controlLayers/store/types';
 import { getGlobalReferenceImageWarnings } from 'features/controlLayers/store/validators';
 import type { Graph } from 'features/nodes/util/graph/generation/Graph';
-import type { Invocation, MainModelConfig } from 'services/api/types';
+import type { Invocation, MainModelConfig, S } from 'services/api/types';
 import { assert } from 'tsafe';
 
 type AddFLUXReduxResult = {
@@ -85,7 +85,7 @@ const addFLUXRedux = (id: string, ipAdapter: FLUXReduxConfig, g: Graph, collecto
   const node = g.addNode({
     id: `flux_redux_${id}`,
     type: 'flux_redux',
-    redux_model: fluxReduxModel,
+    redux_model: fluxReduxModel as S['ModelIdentifierField'],
     image: {
       image_name: image.crop?.image.image_name ?? image.original.image.image_name,
     },

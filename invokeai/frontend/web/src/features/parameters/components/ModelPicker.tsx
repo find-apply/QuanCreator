@@ -443,6 +443,10 @@ const BASE_KEYWORDS: { [key in BaseModelType]?: string[] } = {
   'sd-1': ['sd1', 'sd1.4', 'sd1.5', 'sd-1'],
   'sd-2': ['sd2', 'sd2.0', 'sd2.1', 'sd-2'],
   'sd-3': ['sd3', 'sd3.0', 'sd3.5', 'sd-3'],
+  imagen3: ['imagen3'],
+  imagen4: ['imagen4'],
+  'chatgpt-4o': ['chatgpt-4o'],
+  'flux-kontext': ['flux-kontext'],
 };
 
 const isMatch = <T extends AnyModelConfig>(model: WithStarred<T>, searchTerm: string) => {

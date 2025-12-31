@@ -2,7 +2,7 @@ import type { RootState } from 'app/store/store';
 import { getPrefixedId } from 'features/controlLayers/konva/util';
 import { fetchModelConfigWithTypeGuard } from 'features/metadata/util/modelFetchingHelpers';
 import { Graph } from 'features/nodes/util/graph/generation/Graph';
-import type { Invocation } from 'services/api/types';
+import type { Invocation, S } from 'services/api/types';
 import { isRefinerMainModelModelConfig } from 'services/api/types';
 import { assert } from 'tsafe';
 
@@ -37,7 +37,7 @@ export const addSDXLRefiner = async (
   const refinerModelLoader = g.addNode({
     type: 'sdxl_refiner_model_loader',
     id: getPrefixedId('refiner_model_loader'),
-    model: refinerModel,
+    model: refinerModel as S['ModelIdentifierField'],
   });
   const refinerPosCond = g.addNode({
     type: 'sdxl_refiner_compel_prompt',
@@ -82,7 +82,7 @@ export const addSDXLRefiner = async (
   g.addEdge(refinerDenoise, 'latents', l2i, 'latents');
 
   g.upsertMetadata({
-    refiner_model: Graph.getModelMetadataField(modelConfig),
+    refiner_model: Graph.getModelMetadataField(modelConfig) as S['ModelIdentifierField'],
     refiner_positive_aesthetic_score: refinerPositiveAestheticScore,
     refiner_negative_aesthetic_score: refinerNegativeAestheticScore,
     refiner_cfg_scale: refinerCFGScale,

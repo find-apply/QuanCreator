@@ -282,7 +282,8 @@ export const setEventListeners = ({ socket, store, setIsConnected }: SetEventLis
   socket.on('model_install_complete', (data) => {
     log.debug({ data }, 'Model install complete');
 
-    const { id, config } = data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { id, config } = data as any;
 
     if (config.type === 'unknown') {
       toast({
@@ -378,7 +379,7 @@ export const setEventListeners = ({ socket, store, setIsConnected }: SetEventLis
       queueApi.util.updateQueryData('getQueueItem', item_id, (draft) => {
         draft.status = status;
         draft.started_at = started_at;
-        draft.updated_at = updated_at;
+        draft.updated_at = updated_at as string;
         draft.completed_at = completed_at;
         draft.error_type = error_type;
         draft.error_message = error_message;

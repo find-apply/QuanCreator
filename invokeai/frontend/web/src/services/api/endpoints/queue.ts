@@ -1,11 +1,6 @@
 import queryString from 'query-string';
 import type { components, paths } from 'services/api/schema';
-import type {
-  GetQueueItemDTOsByItemIdsArgs,
-  GetQueueItemDTOsByItemIdsResult,
-  GetQueueItemIdsArgs,
-  GetQueueItemIdsResult,
-} from 'services/api/types';
+import type { GetQueueItemIdsArgs, GetQueueItemIdsResult } from 'services/api/types';
 import stableHash from 'stable-hash';
 import type { Param0 } from 'tsafe';
 
@@ -314,22 +309,15 @@ export const queueApi = api.injectEndpoints({
     }),
     getQueueItemIds: build.query<GetQueueItemIdsResult, GetQueueItemIdsArgs>({
       query: (queryArgs) => ({
-        url: buildQueueUrl(`item_ids?${queryString.stringify(queryArgs)}`),
+        url: buildQueueUrl(`list_all?${queryString.stringify(queryArgs)}`),
         method: 'GET',
       }),
-      providesTags: (queryArgs) => [
+      providesTags: (result, _error, queryArgs) => [
         'FetchOnReconnect',
         'SessionQueueItemIdList',
         { type: 'SessionQueueItemIdList', id: stableHash(queryArgs) },
+        ...(result?.map(({ item_id }) => ({ type: 'SessionQueueItem', id: item_id }) as const) ?? []),
       ],
-    }),
-    getQueueItemDTOsByItemIds: build.mutation<GetQueueItemDTOsByItemIdsResult, GetQueueItemDTOsByItemIdsArgs>({
-      query: (body) => ({
-        url: buildQueueUrl('items_by_ids'),
-        method: 'POST',
-        body,
-      }),
-      // Don't provide cache tags - we'll manually upsert into individual getQueueItem caches
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data: queueItems } = await queryFulfilled;
@@ -405,7 +393,6 @@ export const {
   useGetQueueStatusQuery,
   useGetQueueItemQuery,
   useGetQueueItemIdsQuery,
-  useGetQueueItemDTOsByItemIdsMutation,
   useCancelQueueItemMutation,
   useCancelQueueItemsByDestinationMutation,
   useGetCurrentQueueItemQuery,

@@ -50,12 +50,12 @@ export const addFLUXLoRAs = (
     const loraSelector = g.addNode({
       type: 'lora_selector',
       id: getPrefixedId('lora_selector'),
-      lora: parsedModel,
+      lora: parsedModel as S['ModelIdentifierField'],
       weight,
     });
 
     loraMetadata.push({
-      model: parsedModel,
+      model: parsedModel as S['ModelIdentifierField'],
       weight,
     });
 

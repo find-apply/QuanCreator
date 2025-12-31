@@ -39,7 +39,13 @@ type InvocationOutputSchemaObject = Omit<OpenAPIV3_1.SchemaObject, 'properties'>
   };
 };
 
-export type InvocationFieldSchema = OpenAPIV3_1.SchemaObject & InputFieldJSONSchemaExtra;
+export type InvocationFieldSchema = OpenAPIV3_1.SchemaObject &
+  InputFieldJSONSchemaExtra & {
+    ui_model_base?: string | string[];
+    ui_model_type?: string | string[];
+    ui_model_variant?: string | string[];
+    ui_model_format?: string | string[];
+  };
 
 export type OpenAPIV3_1SchemaOrRef = OpenAPIV3_1.ReferenceObject | OpenAPIV3_1.SchemaObject;
 

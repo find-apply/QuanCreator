@@ -38,7 +38,5 @@ const createQueueSelector = <T>(selector: Selector<QueueState, T>) => createSele
 export const selectQueueSortOrder = createQueueSelector((queue) => queue.sortOrder);
 export const selectGetQueueItemIdsArgs = createMemoizedSelector(
   [selectQueueSortOrder],
-  (order_dir): GetQueueItemIdsArgs => ({
-    order_dir,
-  })
+  (): GetQueueItemIdsArgs => ({})
 );

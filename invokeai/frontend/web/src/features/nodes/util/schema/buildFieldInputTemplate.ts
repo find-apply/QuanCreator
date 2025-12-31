@@ -471,19 +471,7 @@ export const buildFieldInputTemplate = (
   fieldName: string,
   fieldType: FieldType
 ): FieldInputTemplate => {
-  const {
-    input,
-    ui_hidden,
-    ui_component,
-    ui_type,
-    ui_order,
-    ui_choice_labels,
-    orig_required: required,
-    ui_model_base,
-    ui_model_type,
-    ui_model_variant,
-    ui_model_format,
-  } = fieldSchema;
+  const { input, ui_hidden, ui_component, ui_type, ui_order, ui_choice_labels, orig_required: required } = fieldSchema;
 
   // This is the base field template that is common to all fields. The builder function will add all other
   // properties to this template.
@@ -499,10 +487,30 @@ export const buildFieldInputTemplate = (
     ui_type,
     ui_order,
     ui_choice_labels,
-    ui_model_base,
-    ui_model_type,
-    ui_model_variant,
-    ui_model_format,
+    ui_model_base: fieldSchema.ui_model_base
+      ? Array.isArray(fieldSchema.ui_model_base)
+        ? fieldSchema.ui_model_base
+        : [fieldSchema.ui_model_base]
+      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (undefined as any),
+    ui_model_type: fieldSchema.ui_model_type
+      ? Array.isArray(fieldSchema.ui_model_type)
+        ? fieldSchema.ui_model_type
+        : [fieldSchema.ui_model_type]
+      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (undefined as any),
+    ui_model_variant: fieldSchema.ui_model_variant
+      ? Array.isArray(fieldSchema.ui_model_variant)
+        ? fieldSchema.ui_model_variant
+        : [fieldSchema.ui_model_variant]
+      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (undefined as any),
+    ui_model_format: fieldSchema.ui_model_format
+      ? Array.isArray(fieldSchema.ui_model_format)
+        ? fieldSchema.ui_model_format
+        : [fieldSchema.ui_model_format]
+      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (undefined as any),
   };
 
   if (isStatefulFieldType(fieldType)) {

@@ -1490,7 +1490,8 @@ export class CanvasSegmentAnythingModule extends CanvasModuleBase {
     const segmentAnything = graph.addNode({
       id: getPrefixedId('segment_anything'),
       type: 'segment_anything',
-      model: model === 'SAM1' ? 'segment-anything-huge' : 'segment-anything-2-large',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      model: (model === 'SAM1' ? 'segment-anything-huge' : 'segment-anything-2-large') as any,
       point_lists: pointLists,
       bounding_boxes: boundingBoxes,
       mask_filter: 'largest',

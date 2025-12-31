@@ -755,11 +755,11 @@ export type EntityIdentifierPayload<
   U extends CanvasEntityType = CanvasEntityType,
 > = T extends void
   ? {
-    entityIdentifier: CanvasEntityIdentifier<U>;
-  }
+      entityIdentifier: CanvasEntityIdentifier<U>;
+    }
   : {
-    entityIdentifier: CanvasEntityIdentifier<U>;
-  } & T;
+      entityIdentifier: CanvasEntityIdentifier<U>;
+    } & T;
 
 export type EntityMovedToPayload = EntityIdentifierPayload<{ position: Coordinate }>;
 export type EntityMovedByPayload = EntityIdentifierPayload<{ offset: Coordinate }>;

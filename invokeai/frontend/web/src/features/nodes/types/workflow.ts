@@ -14,7 +14,7 @@ const zXYPosition = z
   .default({ x: 0, y: 0 });
 export type XYPosition = z.infer<typeof zXYPosition>;
 
-const zWorkflowCategory = z.enum(['user', 'default']);
+const zWorkflowCategory = z.enum(['user', 'default', 'project']);
 export type WorkflowCategory = z.infer<typeof zWorkflowCategory>;
 // #endregion
 

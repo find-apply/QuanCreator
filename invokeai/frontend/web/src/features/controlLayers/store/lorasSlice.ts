@@ -38,7 +38,8 @@ const slice = createSlice({
         const { model, id } = action.payload;
         const parsedModel = zModelIdentifierField.parse(model);
         const defaultLoRAConfig: Pick<LoRA, 'weight' | 'isEnabled'> = {
-          weight: model.default_settings?.weight ?? DEFAULT_LORA_WEIGHT_CONFIG.initial,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          weight: (model as any).default_settings?.weight ?? DEFAULT_LORA_WEIGHT_CONFIG.initial,
           isEnabled: true,
         };
         state.loras.push({ ...defaultLoRAConfig, model: parsedModel, id });

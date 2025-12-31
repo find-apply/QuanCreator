@@ -10,6 +10,7 @@ import { Graph } from 'features/nodes/util/graph/generation/Graph';
 import { selectCanvasOutputFields, selectPresetModifiedPrompts } from 'features/nodes/util/graph/graphBuilderUtils';
 import type { GraphBuilderArg, GraphBuilderReturn } from 'features/nodes/util/graph/types';
 import { UnsupportedGenerationModeError } from 'features/nodes/util/graph/types';
+import type { S } from 'services/api/types';
 import { assert } from 'tsafe';
 
 const log = logger('system');
@@ -49,13 +50,15 @@ export const buildGeminiGraph = (arg: GraphBuilderArg): GraphBuilderReturn => {
   const geminiAspectRatio = getClosestGeminiAspectRatio(width, height);
 
   const geminiNode = g.addNode({
-    type: nodeType,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    type: nodeType as any,
     id: getPrefixedId('gemini_gen'),
     prompt: prompts.positive,
-    model: model,
+    model: model as S['ModelIdentifierField'],
     aspect_ratio: geminiAspectRatio,
     person_generation: selectGeminiPersonGeneration(state),
-  });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any);
 
   // Set the output node
   g.updateNode(geminiNode, selectCanvasOutputFields(state));

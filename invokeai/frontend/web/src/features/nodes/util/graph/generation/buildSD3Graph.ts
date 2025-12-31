@@ -12,7 +12,7 @@ import { Graph } from 'features/nodes/util/graph/generation/Graph';
 import { selectCanvasOutputFields, selectPresetModifiedPrompts } from 'features/nodes/util/graph/graphBuilderUtils';
 import type { GraphBuilderArg, GraphBuilderReturn, ImageOutputNodes } from 'features/nodes/util/graph/types';
 import { selectActiveTab } from 'features/ui/store/uiSelectors';
-import type { Invocation } from 'services/api/types';
+import type { Invocation, S } from 'services/api/types';
 import type { Equals } from 'tsafe';
 import { assert } from 'tsafe';
 
@@ -38,11 +38,11 @@ export const buildSD3Graph = async (arg: GraphBuilderArg): Promise<GraphBuilderR
   const modelLoader = g.addNode({
     type: 'sd3_model_loader',
     id: getPrefixedId('sd3_model_loader'),
-    model,
-    t5_encoder_model: t5EncoderModel,
-    clip_l_model: clipLEmbedModel,
-    clip_g_model: clipGEmbedModel,
-    vae_model: vae,
+    model: model as S['ModelIdentifierField'],
+    t5_encoder_model: t5EncoderModel as S['ModelIdentifierField'] | undefined,
+    clip_l_model: clipLEmbedModel as S['ModelIdentifierField'] | undefined,
+    clip_g_model: clipGEmbedModel as S['ModelIdentifierField'] | undefined,
+    vae_model: vae as S['ModelIdentifierField'] | undefined,
   });
 
   const positivePrompt = g.addNode({
@@ -96,9 +96,9 @@ export const buildSD3Graph = async (arg: GraphBuilderArg): Promise<GraphBuilderR
   g.upsertMetadata({
     cfg_scale,
     negative_prompt: prompts.negative,
-    model: Graph.getModelMetadataField(model),
+    model: Graph.getModelMetadataField(model) as S['ModelIdentifierField'],
     steps,
-    vae: vae ?? undefined,
+    vae: (vae ?? undefined) as S['ModelIdentifierField'] | undefined,
   });
   g.addEdgeToMetadata(seed, 'value', 'seed');
   g.addEdgeToMetadata(positivePrompt, 'value', 'positive_prompt');

@@ -38,7 +38,8 @@ export const LoRAModelDefaultSettings = memo(({ modelConfig }: Props) => {
 
       updateModel({
         key: modelConfig.key,
-        body: { default_settings: body },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        body: { default_settings: body as any },
       })
         .unwrap()
         .then((_) => {

@@ -39,7 +39,15 @@ const AppErrorBoundaryFallback = ({ error, resetErrorBoundary }: Props) => {
     <Flex layerStyle="body" w="100dvw" h="100dvh" alignItems="center" justifyContent="center" p={4}>
       <Flex layerStyle="first" flexDir="column" borderRadius="base" justifyContent="center" gap={8} p={16}>
         <Flex alignItems="center" gap="2">
-          <Image src="/assets/images/invoke-symbol-ylw-lrg.svg" alt="invoke-logo" w="24px" h="24px" minW="24px" minH="24px" userSelect="none" />
+          <Image
+            src="/assets/images/invoke-symbol-ylw-lrg.svg"
+            alt="invoke-logo"
+            w="24px"
+            h="24px"
+            minW="24px"
+            minH="24px"
+            userSelect="none"
+          />
           <Heading fontSize="2xl">{t('common.somethingWentWrong')}</Heading>
         </Flex>
 

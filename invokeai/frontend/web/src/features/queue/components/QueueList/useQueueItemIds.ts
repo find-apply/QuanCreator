@@ -7,7 +7,7 @@ import { useDebounce } from 'use-debounce';
 const getQueueItemIdsQueryOptions = {
   refetchOnReconnect: true,
   selectFromResult: ({ currentData, isLoading, isFetching }) => ({
-    item_ids: currentData?.item_ids ?? EMPTY_ARRAY,
+    item_ids: currentData?.map((item) => item.item_id) ?? EMPTY_ARRAY,
     isLoading,
     isFetching,
   }),

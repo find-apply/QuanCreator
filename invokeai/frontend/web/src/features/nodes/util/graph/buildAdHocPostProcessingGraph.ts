@@ -4,7 +4,7 @@ import { fetchModelConfigWithTypeGuard } from 'features/metadata/util/modelFetch
 import type { GraphType } from 'features/nodes/util/graph/generation/Graph';
 import { Graph } from 'features/nodes/util/graph/generation/Graph';
 import { getBoardField } from 'features/nodes/util/graph/graphBuilderUtils';
-import type { ImageDTO } from 'services/api/types';
+import type { ImageDTO, S } from 'services/api/types';
 import { isSpandrelImageToImageModelConfig } from 'services/api/types';
 import { assert } from 'tsafe';
 
@@ -22,7 +22,7 @@ export const buildAdHocPostProcessingGraph = async ({ image, state }: Arg): Prom
   g.addNode({
     type: 'spandrel_image_to_image',
     id: getPrefixedId('spandrel'),
-    image_to_image_model: postProcessingModel,
+    image_to_image_model: postProcessingModel as S['ModelIdentifierField'],
     image,
     board: getBoardField(state),
     is_intermediate: false,

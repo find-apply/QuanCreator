@@ -18,7 +18,7 @@ import { Graph } from 'features/nodes/util/graph/generation/Graph';
 import { selectCanvasOutputFields, selectPresetModifiedPrompts } from 'features/nodes/util/graph/graphBuilderUtils';
 import type { GraphBuilderArg, GraphBuilderReturn, ImageOutputNodes } from 'features/nodes/util/graph/types';
 import { selectActiveTab } from 'features/ui/store/uiSelectors';
-import type { Invocation } from 'services/api/types';
+import type { Invocation, S } from 'services/api/types';
 import type { Equals } from 'tsafe';
 import { assert } from 'tsafe';
 
@@ -45,14 +45,12 @@ export const buildSDXLGraph = async (arg: GraphBuilderArg): Promise<GraphBuilder
     scheduler,
     steps,
     shouldUseCpuNoise,
-    colorCompensation,
     vaePrecision,
     vae,
     refinerModel,
   } = params;
 
   const fp32 = vaePrecision === 'fp32';
-  const compensation = colorCompensation ? 'SDXL' : 'None';
   const prompts = selectPresetModifiedPrompts(state);
 
   const g = new Graph(getPrefixedId('sdxl_graph'));
@@ -114,7 +112,7 @@ export const buildSDXLGraph = async (arg: GraphBuilderArg): Promise<GraphBuilder
       ? g.addNode({
           type: 'vae_loader',
           id: getPrefixedId('vae'),
-          vae_model: vae,
+          vae_model: vae as S['ModelIdentifierField'],
         })
       : null;
 
@@ -140,12 +138,12 @@ export const buildSDXLGraph = async (arg: GraphBuilderArg): Promise<GraphBuilder
   g.upsertMetadata({
     cfg_scale,
     cfg_rescale_multiplier,
-    model: Graph.getModelMetadataField(model),
+    model: Graph.getModelMetadataField(model) as S['ModelIdentifierField'],
     steps,
     rand_device: shouldUseCpuNoise ? 'cpu' : 'cuda',
     scheduler,
     negative_prompt: prompts.negative,
-    vae: vae ?? undefined,
+    vae: (vae ?? undefined) as S['ModelIdentifierField'] | undefined,
   });
   g.addEdgeToMetadata(seed, 'value', 'seed');
   g.addEdgeToMetadata(positivePrompt, 'value', 'positive_prompt');
@@ -180,7 +178,6 @@ export const buildSDXLGraph = async (arg: GraphBuilderArg): Promise<GraphBuilder
       type: 'i2l',
       id: getPrefixedId('i2l'),
       fp32,
-      color_compensation: compensation,
     });
     canvasOutput = await addImageToImage({
       g,
@@ -199,7 +196,6 @@ export const buildSDXLGraph = async (arg: GraphBuilderArg): Promise<GraphBuilder
       type: 'i2l',
       id: getPrefixedId('i2l'),
       fp32,
-      color_compensation: compensation,
     });
     canvasOutput = await addInpaint({
       g,
@@ -220,7 +216,6 @@ export const buildSDXLGraph = async (arg: GraphBuilderArg): Promise<GraphBuilder
       type: 'i2l',
       id: getPrefixedId('i2l'),
       fp32,
-      color_compensation: compensation,
     });
     canvasOutput = await addOutpaint({
       g,

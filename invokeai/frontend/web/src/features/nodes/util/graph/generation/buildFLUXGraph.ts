@@ -22,7 +22,7 @@ import type { GraphBuilderArg, GraphBuilderReturn, ImageOutputNodes } from 'feat
 import { UnsupportedGenerationModeError } from 'features/nodes/util/graph/types';
 import { selectActiveTab } from 'features/ui/store/uiSelectors';
 import { t } from 'i18next';
-import type { Invocation } from 'services/api/types';
+import type { FLUXModelConfig, Invocation, S } from 'services/api/types';
 import type { Equals } from 'tsafe';
 import { assert } from 'tsafe';
 
@@ -49,7 +49,7 @@ export const buildFLUXGraph = async (arg: GraphBuilderArg): Promise<GraphBuilder
   assert(clipEmbedModel, 'No CLIP Embed model found in state');
   assert(fluxVAE, 'No FLUX VAE model found in state');
 
-  const isFLUXFill = model.variant === 'dev_fill';
+  const isFLUXFill = (model.variant as string) === 'dev_fill';
   let guidance = baseGuidance;
   if (isFLUXFill) {
     // FLUX Fill doesn't work with Text to Image or Image to Image generation modes. Well, technically, it does, but
@@ -86,10 +86,10 @@ export const buildFLUXGraph = async (arg: GraphBuilderArg): Promise<GraphBuilder
   const modelLoader = g.addNode({
     type: 'flux_model_loader',
     id: getPrefixedId('flux_model_loader'),
-    model,
-    t5_encoder_model: t5EncoderModel,
-    clip_embed_model: clipEmbedModel,
-    vae_model: fluxVAE,
+    model: model as S['ModelIdentifierField'],
+    t5_encoder_model: t5EncoderModel as S['ModelIdentifierField'],
+    clip_embed_model: clipEmbedModel as S['ModelIdentifierField'],
+    vae_model: fluxVAE as S['ModelIdentifierField'],
   });
 
   const positivePrompt = g.addNode({
@@ -140,11 +140,11 @@ export const buildFLUXGraph = async (arg: GraphBuilderArg): Promise<GraphBuilder
 
   g.upsertMetadata({
     guidance,
-    model: Graph.getModelMetadataField(model),
+    model: Graph.getModelMetadataField(model) as S['ModelIdentifierField'],
     steps,
-    vae: fluxVAE,
-    t5_encoder: t5EncoderModel,
-    clip_embed_model: clipEmbedModel,
+    vae: fluxVAE as S['ModelIdentifierField'],
+    t5_encoder: t5EncoderModel as S['ModelIdentifierField'],
+    clip_embed_model: clipEmbedModel as S['ModelIdentifierField'],
   });
   g.addEdgeToMetadata(seed, 'value', 'seed');
   g.addEdgeToMetadata(positivePrompt, 'value', 'positive_prompt');
@@ -163,14 +163,17 @@ export const buildFLUXGraph = async (arg: GraphBuilderArg): Promise<GraphBuilder
       for (const { config } of validFLUXKontextConfigs) {
         const kontextImagePrep = g.addNode({
           id: getPrefixedId('flux_kontext_image_prep'),
-          type: 'flux_kontext_image_prep',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          type: 'flux_kontext_image_prep' as any,
           images: [zImageField.parse(config.image?.crop?.image ?? config.image?.original.image)],
         });
         const kontextConditioning = g.addNode({
           type: 'flux_kontext',
           id: getPrefixedId('flux_kontext'),
         });
-        g.addEdge(kontextImagePrep, 'image', kontextConditioning, 'image');
+        // @ts-expect-error The edge types are too strict for this dynamic graph construction
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        g.addEdge(kontextImagePrep as any, 'image', kontextConditioning as any, 'image');
         g.addEdge(kontextConditioning, 'kontext_cond', fluxKontextCollect, 'item');
       }
       g.addEdge(fluxKontextCollect, 'collection', denoise, 'kontext_conditioning');
@@ -279,7 +282,7 @@ export const buildFLUXGraph = async (arg: GraphBuilderArg): Promise<GraphBuilder
       g,
       rect: canvas.bbox.rect,
       denoise,
-      model,
+      model: model as FLUXModelConfig,
     });
   }
 

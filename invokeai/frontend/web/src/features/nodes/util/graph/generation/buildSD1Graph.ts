@@ -18,7 +18,7 @@ import { Graph } from 'features/nodes/util/graph/generation/Graph';
 import { selectCanvasOutputFields, selectPresetModifiedPrompts } from 'features/nodes/util/graph/graphBuilderUtils';
 import type { GraphBuilderArg, GraphBuilderReturn, ImageOutputNodes } from 'features/nodes/util/graph/types';
 import { selectActiveTab } from 'features/ui/store/uiSelectors';
-import type { Invocation } from 'services/api/types';
+import type { Invocation, S } from 'services/api/types';
 import type { Equals } from 'tsafe';
 import { assert } from 'tsafe';
 
@@ -114,7 +114,7 @@ export const buildSD1Graph = async (arg: GraphBuilderArg): Promise<GraphBuilderR
       ? g.addNode({
           type: 'vae_loader',
           id: getPrefixedId('vae'),
-          vae_model: vae,
+          vae_model: vae as S['ModelIdentifierField'],
         })
       : null;
 
@@ -138,12 +138,12 @@ export const buildSD1Graph = async (arg: GraphBuilderArg): Promise<GraphBuilderR
     cfg_scale,
     cfg_rescale_multiplier,
     negative_prompt: prompts.negative,
-    model: Graph.getModelMetadataField(model),
+    model: Graph.getModelMetadataField(model) as S['ModelIdentifierField'],
     steps,
     rand_device: shouldUseCpuNoise ? 'cpu' : 'cuda',
     scheduler,
     clip_skip: skipped_layers,
-    vae: vae ?? undefined,
+    vae: (vae ?? undefined) as S['ModelIdentifierField'] | undefined,
   });
   g.addEdgeToMetadata(seed, 'value', 'seed');
   g.addEdgeToMetadata(positivePrompt, 'value', 'positive_prompt');

@@ -2,7 +2,7 @@ import { getPrefixedId } from 'features/controlLayers/konva/util';
 import type { ImageWithDims } from 'features/controlLayers/store/types';
 import { zModelIdentifierField } from 'features/nodes/types/common';
 import { Graph } from 'features/nodes/util/graph/generation/Graph';
-import type { ControlLoRAModelConfig, ControlNetModelConfig, T2IAdapterModelConfig } from 'services/api/types';
+import type { ControlLoRAModelConfig, ControlNetModelConfig, S, T2IAdapterModelConfig } from 'services/api/types';
 import { assert } from 'tsafe';
 import { z } from 'zod';
 
@@ -498,14 +498,14 @@ export const IMAGE_FILTERS: { [key in FilterConfig['type']]: ImageFilterData<key
           ? {
               id: getPrefixedId('spandrel_image_to_image_autoscale'),
               type: 'spandrel_image_to_image_autoscale',
-              image_to_image_model: model,
+              image_to_image_model: model as S['ModelIdentifierField'],
               image: { image_name },
               scale,
             }
           : {
               id: getPrefixedId('spandrel_image_to_image'),
               type: 'spandrel_image_to_image',
-              image_to_image_model: model,
+              image_to_image_model: model as S['ModelIdentifierField'],
               image: { image_name },
             }
       );

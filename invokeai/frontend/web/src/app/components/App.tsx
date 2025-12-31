@@ -3,10 +3,14 @@ import { useStore } from '@nanostores/react';
 import { GlobalHookIsolator } from 'app/components/GlobalHookIsolator';
 import { GlobalModalIsolator } from 'app/components/GlobalModalIsolator';
 import { clearStorage } from 'app/store/enhancers/reduxRemember/driver';
+import { useAppSelector } from 'app/store/storeHooks';
 import Loading from 'common/components/Loading/Loading';
+import { LoginPage } from 'features/auth/components/LoginPage';
+import { RegisterPage } from 'features/auth/components/RegisterPage';
+import { selectIsAuthenticated } from 'features/auth/store/authSlice';
 import { AppContent } from 'features/ui/components/AppContent';
 import { navigationApi } from 'features/ui/layouts/navigation-api';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import AppErrorBoundaryFallback from './AppErrorBoundaryFallback';
@@ -20,6 +24,25 @@ const errorBoundaryOnReset = () => {
 
 const App = () => {
   const isNavigationAPIConnected = useStore(navigationApi.$isConnected);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const [authView, setAuthView] = useState<'login' | 'register'>('login');
+
+  if (!isAuthenticated) {
+    return (
+      <ThemeLocaleProvider>
+        <Box w="100dvw" h="100dvh" bg="base.900">
+          {authView === 'login' ? (
+            // eslint-disable-next-line react/jsx-no-bind
+            <LoginPage onRegisterClick={() => setAuthView('register')} />
+          ) : (
+            // eslint-disable-next-line react/jsx-no-bind
+            <RegisterPage onLoginClick={() => setAuthView('login')} />
+          )}
+        </Box>
+      </ThemeLocaleProvider>
+    );
+  }
+
   return (
     <ThemeLocaleProvider>
       <ErrorBoundary onReset={errorBoundaryOnReset} FallbackComponent={AppErrorBoundaryFallback}>

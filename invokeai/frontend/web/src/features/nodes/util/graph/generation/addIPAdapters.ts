@@ -1,7 +1,7 @@
 import { type IPAdapterConfig, isIPAdapterConfig, type RefImageState } from 'features/controlLayers/store/types';
 import { getGlobalReferenceImageWarnings } from 'features/controlLayers/store/validators';
 import type { Graph } from 'features/nodes/util/graph/generation/Graph';
-import type { Invocation, MainModelConfig } from 'services/api/types';
+import type { Invocation, MainModelConfig, S } from 'services/api/types';
 import { assert } from 'tsafe';
 
 type AddIPAdaptersResult = {
@@ -53,7 +53,7 @@ const addIPAdapter = (id: string, ipAdapter: IPAdapterConfig, g: Graph, collecto
       id: `ip_adapter_${id}`,
       type: 'flux_ip_adapter',
       weight,
-      ip_adapter_model: model,
+      ip_adapter_model: model as S['ModelIdentifierField'],
       clip_vision_model: clipVisionModel,
       begin_step_percent: beginEndStepPct[0],
       end_step_percent: beginEndStepPct[1],
@@ -72,7 +72,7 @@ const addIPAdapter = (id: string, ipAdapter: IPAdapterConfig, g: Graph, collecto
       type: 'ip_adapter',
       weight,
       method,
-      ip_adapter_model: model,
+      ip_adapter_model: model as S['ModelIdentifierField'],
       clip_vision_model: clipVisionModel,
       begin_step_percent: beginEndStepPct[0],
       end_step_percent: beginEndStepPct[1],

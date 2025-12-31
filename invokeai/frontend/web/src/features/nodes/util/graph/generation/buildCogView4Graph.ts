@@ -13,7 +13,7 @@ import { Graph } from 'features/nodes/util/graph/generation/Graph';
 import { selectCanvasOutputFields, selectPresetModifiedPrompts } from 'features/nodes/util/graph/graphBuilderUtils';
 import type { GraphBuilderArg, GraphBuilderReturn, ImageOutputNodes } from 'features/nodes/util/graph/types';
 import { selectActiveTab } from 'features/ui/store/uiSelectors';
-import type { Invocation } from 'services/api/types';
+import type { Invocation, S } from 'services/api/types';
 import { isNonRefinerMainModelConfig } from 'services/api/types';
 import type { Equals } from 'tsafe';
 import { assert } from 'tsafe';
@@ -40,7 +40,7 @@ export const buildCogView4Graph = async (arg: GraphBuilderArg): Promise<GraphBui
   const modelLoader = g.addNode({
     type: 'cogview4_model_loader',
     id: getPrefixedId('cogview4_model_loader'),
-    model,
+    model: model as S['ModelIdentifierField'],
   });
 
   const positivePrompt = g.addNode({
@@ -92,7 +92,7 @@ export const buildCogView4Graph = async (arg: GraphBuilderArg): Promise<GraphBui
   g.upsertMetadata({
     cfg_scale,
     negative_prompt: prompts.negative,
-    model: Graph.getModelMetadataField(modelConfig),
+    model: Graph.getModelMetadataField(modelConfig) as S['ModelIdentifierField'],
     steps,
   });
   g.addEdgeToMetadata(seed, 'value', 'seed');

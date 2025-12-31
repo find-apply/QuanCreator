@@ -159,7 +159,13 @@ const DefaultThumbnailFallback = memo(() => {
       justifyContent="center"
       opacity={0.3}
     >
-      <Image src="/assets/images/invoke-symbol-wht-lrg.svg" alt="invoke-logo" userSelect="none" boxSize={FALLBACK_ICON_SIZE} p={1} />
+      <Image
+        src="/assets/images/invoke-symbol-wht-lrg.svg"
+        alt="invoke-logo"
+        userSelect="none"
+        boxSize={FALLBACK_ICON_SIZE}
+        p={1}
+      />
     </Flex>
   );
 });

@@ -14,14 +14,28 @@ import HotkeysModal from 'features/system/components/HotkeysModal/HotkeysModal';
 import { discordLink, githubLink } from 'features/system/store/constants';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PiBugBeetleBold, PiGearSixFill, PiInfoBold, PiKeyboardBold, PiToggleRightFill } from 'react-icons/pi';
+import {
+  PiBugBeetleBold,
+  PiGearSixFill,
+  PiInfoBold,
+  PiKeyboardBold,
+  PiSignOutBold,
+  PiToggleRightFill,
+} from 'react-icons/pi';
 import { RiDiscordFill, RiGithubFill } from 'react-icons/ri';
+import { useLogoutMutation } from 'services/api/endpoints/auth';
 
 import SettingsModal from './SettingsModal';
 const SettingsMenu = () => {
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   useGlobalMenuClose(onClose);
+  const [logout] = useLogoutMutation();
+
+  const handleLogout = () => {
+    logout();
+    onClose();
+  };
 
   return (
     <Menu isOpen={isOpen} onOpen={onOpen} onClose={onClose} autoSelect={false}>
@@ -58,6 +72,14 @@ const SettingsMenu = () => {
               </MenuItem>
             </SettingsModal>
           </MenuGroup>
+
+          <MenuGroup title="Account">
+            {/* eslint-disable-next-line react/jsx-no-bind */}
+            <MenuItem as="button" icon={<PiSignOutBold />} onClick={handleLogout}>
+              Logout
+            </MenuItem>
+          </MenuGroup>
+
           <MenuGroup title={t('accessibility.about')}>
             <AboutModal>
               <MenuItem as="button" icon={<PiInfoBold />}>

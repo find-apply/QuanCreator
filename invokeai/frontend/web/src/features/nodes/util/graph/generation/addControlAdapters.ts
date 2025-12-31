@@ -5,7 +5,7 @@ import type { CanvasControlLayerState, Rect } from 'features/controlLayers/store
 import { getControlLayerWarnings } from 'features/controlLayers/store/validators';
 import type { Graph } from 'features/nodes/util/graph/generation/Graph';
 import { serializeError } from 'serialize-error';
-import type { FLUXModelConfig, ImageDTO, Invocation, MainModelConfig } from 'services/api/types';
+import type { FLUXModelConfig, ImageDTO, Invocation, MainModelConfig, S } from 'services/api/types';
 import { assert } from 'tsafe';
 
 const log = logger('system');
@@ -129,7 +129,8 @@ export const addControlLoRA = async ({ manager, entities, g, rect, model, denois
     return;
   }
 
-  assert(model.variant !== 'dev_fill', 'FLUX Control LoRA is not compatible with FLUX Fill.');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  assert((model as any).variant !== 'dev_fill', 'FLUX Control LoRA is not compatible with FLUX Fill.');
   assert(validControlLayers.length <= 1, 'Cannot add more than one FLUX control LoRA.');
 
   const getImageDTOResult = await withResultAsync(() => {
@@ -165,7 +166,7 @@ const addControlNetToGraph = (
     end_step_percent: beginEndStepPct[1],
     control_mode: model.base === 'flux' ? undefined : controlMode,
     resize_mode: 'just_resize',
-    control_model: model,
+    control_model: model as S['ModelIdentifierField'],
     control_weight: weight,
     image: { image_name },
   });
@@ -190,7 +191,7 @@ const addT2IAdapterToGraph = (
     begin_step_percent: beginEndStepPct[0],
     end_step_percent: beginEndStepPct[1],
     resize_mode: 'just_resize',
-    t2i_adapter_model: model,
+    t2i_adapter_model: model as S['ModelIdentifierField'],
     weight: weight,
     image: { image_name },
   });
@@ -213,7 +214,7 @@ const addControlLoRAToGraph = (
   const controlLoRA = g.addNode({
     id: `control_lora_${id}`,
     type: 'flux_control_lora_loader',
-    lora: model,
+    lora: model as S['ModelIdentifierField'],
     image: { image_name },
     weight: weight,
   });

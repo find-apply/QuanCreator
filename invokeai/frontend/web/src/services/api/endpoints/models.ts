@@ -317,10 +317,8 @@ export const modelsApi = api.injectEndpoints({
     emptyModelCache: build.mutation<void, void>({
       query: () => ({ url: buildModelsUrl('empty_model_cache'), method: 'POST' }),
     }),
-    reidentifyModel: build.mutation<
-      paths['/api/v2/models/i/{key}/reidentify']['post']['responses']['200']['content']['application/json'],
-      { key: string }
-    >({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    reidentifyModel: build.mutation<any, { key: string }>({
       query: ({ key }) => {
         return {
           url: buildModelsUrl(`i/${key}/reidentify`),

@@ -3,6 +3,7 @@ import { getPrefixedId } from 'features/controlLayers/konva/util';
 import { fetchModelConfigWithTypeGuard } from 'features/metadata/util/modelFetchingHelpers';
 import { addSDXLLoRAs } from 'features/nodes/util/graph/generation/addSDXLLoRAs';
 import { Graph } from 'features/nodes/util/graph/generation/Graph';
+import type { S } from 'services/api/types';
 import { isNonRefinerMainModelConfig, isSpandrelImageToImageModelConfig } from 'services/api/types';
 import { assert } from 'tsafe';
 
@@ -40,7 +41,7 @@ export const buildMultidiffusionUpscaleGraph = async (state: RootState): Promise
     type: 'spandrel_image_to_image_autoscale',
     id: getPrefixedId('spandrel_autoscale'),
     image: upscaleInitialImage,
-    image_to_image_model: upscaleModel,
+    image_to_image_model: upscaleModel as S['ModelIdentifierField'],
     fit_to_multiple_of_8: true,
     scale,
   });
@@ -120,7 +121,7 @@ export const buildMultidiffusionUpscaleGraph = async (state: RootState): Promise
     modelLoader = g.addNode({
       type: 'sdxl_model_loader',
       id: getPrefixedId('sdxl_model_loader'),
-      model,
+      model: model as S['ModelIdentifierField'],
     });
 
     g.addEdge(modelLoader, 'clip', posCond, 'clip');
@@ -153,7 +154,7 @@ export const buildMultidiffusionUpscaleGraph = async (state: RootState): Promise
     modelLoader = g.addNode({
       type: 'main_model_loader',
       id: getPrefixedId('sd1_model_loader'),
-      model,
+      model: model as S['ModelIdentifierField'],
     });
     const clipSkipNode = g.addNode({
       type: 'clip_skip',
@@ -181,10 +182,10 @@ export const buildMultidiffusionUpscaleGraph = async (state: RootState): Promise
 
   g.upsertMetadata({
     cfg_scale,
-    model: Graph.getModelMetadataField(modelConfig),
+    model: Graph.getModelMetadataField(modelConfig) as S['ModelIdentifierField'],
     steps,
     scheduler,
-    vae: vae ?? undefined,
+    vae: (vae ?? undefined) as S['ModelIdentifierField'] | undefined,
     upscale_model: Graph.getModelMetadataField(upscaleModelConfig),
     creativity,
     structure,
@@ -208,7 +209,7 @@ export const buildMultidiffusionUpscaleGraph = async (state: RootState): Promise
     vaeLoader = g.addNode({
       type: 'vae_loader',
       id: getPrefixedId('vae'),
-      vae_model: vae,
+      vae_model: vae as S['ModelIdentifierField'],
     });
   }
 
@@ -225,7 +226,7 @@ export const buildMultidiffusionUpscaleGraph = async (state: RootState): Promise
   const controlNet1 = g.addNode({
     id: 'controlnet_1',
     type: 'controlnet',
-    control_model: tileControlnetModel,
+    control_model: tileControlnetModel as S['ModelIdentifierField'],
     control_mode: 'balanced',
     resize_mode: 'just_resize',
     control_weight: (structure + 10) * 0.0325 + 0.3,
@@ -238,7 +239,7 @@ export const buildMultidiffusionUpscaleGraph = async (state: RootState): Promise
   const controlNet2 = g.addNode({
     id: 'controlnet_2',
     type: 'controlnet',
-    control_model: tileControlnetModel,
+    control_model: tileControlnetModel as S['ModelIdentifierField'],
     control_mode: 'balanced',
     resize_mode: 'just_resize',
     control_weight: ((structure + 10) * 0.0325 + 0.15) * 0.45,

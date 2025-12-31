@@ -19,7 +19,7 @@ import { api, buildV1Url, LIST_TAG } from '..';
  * buildBoardsUrl('some-path')
  * // '/api/v1/boards/some-path'
  */
-export const buildBoardsUrl = (path: string = '') => buildV1Url(`boards/${path}`);
+export const buildBoardsUrl = (path: string = '') => buildV1Url(`admin/boards/${path}`);
 
 export const boardsApi = api.injectEndpoints({
   endpoints: (build) => ({

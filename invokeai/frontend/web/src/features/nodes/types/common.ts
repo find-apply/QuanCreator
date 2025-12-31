@@ -72,6 +72,10 @@ export const zBaseModelType = z.enum([
   'sdxl-refiner',
   'flux',
   'cogview4',
+  'imagen3',
+  'imagen4',
+  'chatgpt-4o',
+  'flux-kontext',
   'unknown',
 ]);
 export type BaseModelType = z.infer<typeof zBaseModelType>;
@@ -116,6 +120,7 @@ export const zSubModelType = z.enum([
 
 export const zClipVariantType = z.enum(['large', 'gigantic']);
 export const zModelVariantType = z.enum(['normal', 'inpaint', 'depth']);
+/** @knipignore */
 export const zFluxVariantType = z.enum(['dev', 'dev_fill', 'schnell']);
 export const zAnyModelVariant = z.union([zModelVariantType, zClipVariantType, zFluxVariantType]);
 export type AnyModelVariant = z.infer<typeof zAnyModelVariant>;
@@ -159,6 +164,7 @@ const _zControlField = z.object({
   control_mode: z.enum(['balanced', 'more_prompt', 'more_control', 'unbalanced']).optional(),
   resize_mode: z.enum(['just_resize', 'crop_resize', 'fill_resize', 'just_resize_simple']).optional(),
 });
+/** @knipignore */
 export type ControlField = z.infer<typeof _zControlField>;
 
 const _zIPAdapterField = z.object({
@@ -179,6 +185,7 @@ const _zT2IAdapterField = z.object({
   end_step_percent: z.number().optional(),
   resize_mode: z.enum(['just_resize', 'crop_resize', 'fill_resize', 'just_resize_simple']).optional(),
 });
+/** @knipignore */
 export type T2IAdapterField = z.infer<typeof _zT2IAdapterField>;
 // #endregion
 

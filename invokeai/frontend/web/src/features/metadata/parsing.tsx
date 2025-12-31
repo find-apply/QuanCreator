@@ -1239,7 +1239,7 @@ const parseModelIdentifier = async (raw: unknown, store: AppStore, type: ModelTy
   // Fall back to old format identifier: model_name, base_model
   // No error handling here - this is our last chance to get a model identifier
   const { model_name, base_model } = zModelIdentifier.parse(raw);
-  const arg = { name: model_name, base: base_model, type };
+  const arg = { name: model_name, base: base_model, type: type as any };
   const req = store.dispatch(modelsApi.endpoints.getModelConfigByAttrs.initiate(arg, options));
   const modelConfig = await req.unwrap();
   return zModelIdentifierField.parse(modelConfig);

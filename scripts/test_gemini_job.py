@@ -3,7 +3,7 @@ import json
 import time
 import sys
 
-BASE_URL = "http://127.0.0.1:9090/api"
+BASE_URL = "https://quancreator.aipod.works/api"
 
 def get_gemini_model():
     """Finds and returns the Gemini 2.5 Flash model configuration."""

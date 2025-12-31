@@ -53,7 +53,8 @@ const GalleryBoard = ({ board, isSelected }: GalleryBoardProps) => {
   const boardCounts = useMemo(
     () => ({
       image_count: board.image_count,
-      asset_count: board.asset_count,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      asset_count: (board as any).asset_count,
     }),
     [board]
   );
@@ -92,7 +93,8 @@ const GalleryBoard = ({ board, isSelected }: GalleryBoardProps) => {
               {board.archived && <Icon as={PiArchiveBold} fill="base.300" />}
               <Flex justifyContent="flex-end">
                 <Text variant="subtext">
-                  {board.image_count} | {board.asset_count}
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {board.image_count} | {(board as any).asset_count}
                 </Text>
               </Flex>
             </Flex>

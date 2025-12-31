@@ -29,6 +29,7 @@ import type {
   ParameterCLIPGEmbedModel,
   ParameterCLIPLEmbedModel,
   ParameterControlLoRAModel,
+  ParameterGeminiPersonGeneration,
   ParameterGuidance,
   ParameterModel,
   ParameterNegativePrompt,
@@ -36,7 +37,6 @@ import type {
   ParameterPrecision,
   ParameterScheduler,
   ParameterSDXLRefinerModel,
-  ParameterT5EncoderModel,
   ParameterT5EncoderModel,
   ParameterVAEModel,
 } from 'features/parameters/types/parameterSchemas';
@@ -614,5 +614,5 @@ export const selectMainModelConfig = createSelector(
 );
 
 export const selectIsAPIModel = createSelector(selectMainModelConfig, (config) => {
-  return config?.format === 'api';
+  return (config?.format as string) === 'api';
 });

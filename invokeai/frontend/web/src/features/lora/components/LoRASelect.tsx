@@ -29,7 +29,7 @@ const LoRASelect = () => {
     if (!currentBaseModel) {
       return EMPTY_ARRAY;
     }
-    return modelConfigs.filter((model) => model.base === currentBaseModel && model.format !== 'api');
+    return modelConfigs.filter((model) => model.base === currentBaseModel && model.format !== ('api' as string));
   }, [modelConfigs, currentBaseModel]);
 
   const getIsDisabled = useCallback(

@@ -7,11 +7,14 @@ export const useLoRAModelDefaultSettings = (modelConfig: LoRAModelConfig) => {
   const defaultSettingsDefaults = useMemo(() => {
     return {
       weight: {
-        isEnabled: !isNil(modelConfig?.default_settings?.weight),
-        value: modelConfig?.default_settings?.weight ?? DEFAULT_LORA_WEIGHT_CONFIG.initial,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        isEnabled: !isNil((modelConfig as any)?.default_settings?.weight),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        value: (modelConfig as any)?.default_settings?.weight ?? DEFAULT_LORA_WEIGHT_CONFIG.initial,
       },
     };
-  }, [modelConfig?.default_settings]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, react-hooks/exhaustive-deps
+  }, [(modelConfig as any)?.default_settings]);
 
   return defaultSettingsDefaults;
 };

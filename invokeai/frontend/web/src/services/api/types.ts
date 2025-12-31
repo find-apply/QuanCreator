@@ -28,14 +28,13 @@ export type GraphAndWorkflowResponse =
 export type EnqueueBatchArg =
   paths['/api/v1/queue/{queue_id}/enqueue_batch']['post']['requestBody']['content']['application/json'];
 
-export type GetQueueItemIdsResult =
-  paths['/api/v1/queue/{queue_id}/item_ids']['get']['responses']['200']['content']['application/json'];
-export type GetQueueItemIdsArgs = NonNullable<paths['/api/v1/queue/{queue_id}/item_ids']['get']['parameters']['query']>;
+export type GetQueueItemIdsResult = S['SessionQueueItem'][];
+export type GetQueueItemIdsArgs = NonNullable<paths['/api/v1/queue/{queue_id}/list_all']['get']['parameters']['query']>;
 
-export type GetQueueItemDTOsByItemIdsResult =
-  paths['/api/v1/queue/{queue_id}/items_by_ids']['post']['responses']['200']['content']['application/json'];
-export type GetQueueItemDTOsByItemIdsArgs =
-  paths['/api/v1/queue/{queue_id}/items_by_ids']['post']['requestBody']['content']['application/json'];
+// export type GetQueueItemDTOsByItemIdsResult =
+//   paths['/api/v1/queue/{queue_id}/items_by_ids']['post']['responses']['200']['content']['application/json'];
+// export type GetQueueItemDTOsByItemIdsArgs =
+//   paths['/api/v1/queue/{queue_id}/items_by_ids']['post']['requestBody']['content']['application/json'];
 
 export type InputFieldJSONSchemaExtra = S['InputFieldJSONSchemaExtra'];
 export type OutputFieldJSONSchemaExtra = S['OutputFieldJSONSchemaExtra'];
@@ -77,31 +76,64 @@ export type BoardDTO = S['BoardDTO'];
 export type OffsetPaginatedResults_ImageDTO_ = S['OffsetPaginatedResults_ImageDTO_'];
 
 // Model Configs
-export type AnyModelConfig = S['AnyModelConfig'];
-export type MainModelConfig = Extract<S['AnyModelConfig'], { type: 'main' }>;
-export type FLUXModelConfig = Extract<S['AnyModelConfig'], { type: 'main'; base: 'flux' }>;
-export type ControlLoRAModelConfig = Extract<S['AnyModelConfig'], { type: 'control_lora' }>;
-export type LoRAModelConfig = Extract<S['AnyModelConfig'], { type: 'lora' }>;
-export type VAEModelConfig = Extract<S['AnyModelConfig'], { type: 'vae' }>;
-export type ControlNetModelConfig = Extract<S['AnyModelConfig'], { type: 'controlnet' }>;
-export type IPAdapterModelConfig = Extract<S['AnyModelConfig'], { type: 'ip_adapter' }>;
-export type T2IAdapterModelConfig = Extract<S['AnyModelConfig'], { type: 't2i_adapter' }>;
-export type CLIPLEmbedModelConfig = Extract<S['AnyModelConfig'], { type: 'clip_embed'; variant: 'large' }>;
-export type CLIPGEmbedModelConfig = Extract<S['AnyModelConfig'], { type: 'clip_embed'; variant: 'gigantic' }>;
-export type CLIPEmbedModelConfig = Extract<S['AnyModelConfig'], { type: 'clip_embed' }>;
-type LlavaOnevisionConfig = Extract<S['AnyModelConfig'], { type: 'llava_onevision' }>;
-export type T5EncoderModelConfig = Extract<S['AnyModelConfig'], { type: 't5_encoder' }>;
-export type T5EncoderBnbQuantizedLlmInt8bModelConfig = Extract<
-  S['AnyModelConfig'],
-  { type: 't5_encoder'; format: 'bnb_quantized_int8b' }
->;
-export type SpandrelImageToImageModelConfig = Extract<S['AnyModelConfig'], { type: 'spandrel_image_to_image' }>;
-export type CheckpointModelConfig = Extract<S['AnyModelConfig'], { type: 'main'; format: 'checkpoint' }>;
-type CLIPVisionDiffusersConfig = Extract<S['AnyModelConfig'], { type: 'clip_vision' }>;
-type SigLipModelConfig = Extract<S['AnyModelConfig'], { type: 'siglip' }>;
-export type FLUXReduxModelConfig = Extract<S['AnyModelConfig'], { type: 'flux_redux' }>;
-type ApiModelConfig = Extract<S['AnyModelConfig'], { format: 'api' }>;
-type UnknownModelConfig = Extract<S['AnyModelConfig'], { type: 'unknown' }>;
+export type AnyModelConfig =
+  | S['MainCheckpointConfig']
+  | S['MainDiffusersConfig']
+  | S['MainBnbQuantized4bCheckpointConfig']
+  | S['MainGGUFCheckpointConfig']
+  | S['VAECheckpointConfig']
+  | S['VAEDiffusersConfig']
+  | S['ControlNetCheckpointConfig']
+  | S['ControlNetDiffusersConfig']
+  | S['LoRADiffusersConfig']
+  | S['LoRALyCORISConfig']
+  | S['LoRAOmiConfig']
+  | S['T2IAdapterConfig']
+  | S['IPAdapterCheckpointConfig']
+  | S['IPAdapterInvokeAIConfig']
+  | S['TextualInversionFileConfig']
+  | S['TextualInversionFolderConfig']
+  | S['SigLIPConfig']
+  | S['FluxReduxConfig']
+  | S['SpandrelImageToImageConfig']
+  | S['T5EncoderConfig']
+  | S['T5EncoderBnbQuantizedLlmInt8bConfig']
+  | S['LlavaOnevisionConfig']
+  | S['CLIPGEmbedDiffusersConfig']
+  | S['CLIPLEmbedDiffusersConfig']
+  | S['CLIPVisionDiffusersConfig']
+  | S['ControlLoRADiffusersConfig']
+  | S['ControlLoRALyCORISConfig']
+  | S['ApiModelConfig'];
+
+export type MainModelConfig =
+  | S['MainCheckpointConfig']
+  | S['MainDiffusersConfig']
+  | S['MainBnbQuantized4bCheckpointConfig']
+  | S['MainGGUFCheckpointConfig'];
+export type FLUXModelConfig = Extract<MainModelConfig, { base: 'flux' }>;
+export type ControlLoRAModelConfig = S['ControlLoRADiffusersConfig'] | S['ControlLoRALyCORISConfig'];
+export type LoRAModelConfig = S['LoRADiffusersConfig'] | S['LoRALyCORISConfig'] | S['LoRAOmiConfig'];
+export type VAEModelConfig = S['VAECheckpointConfig'] | S['VAEDiffusersConfig'];
+export type ControlNetModelConfig = S['ControlNetCheckpointConfig'] | S['ControlNetDiffusersConfig'];
+export type IPAdapterModelConfig = S['IPAdapterCheckpointConfig'] | S['IPAdapterInvokeAIConfig'];
+export type T2IAdapterModelConfig = S['T2IAdapterConfig'];
+export type CLIPLEmbedModelConfig = S['CLIPLEmbedDiffusersConfig'];
+export type CLIPGEmbedModelConfig = S['CLIPGEmbedDiffusersConfig'];
+export type CLIPEmbedModelConfig = CLIPLEmbedModelConfig | CLIPGEmbedModelConfig;
+type LlavaOnevisionConfig = S['LlavaOnevisionConfig'];
+export type T5EncoderModelConfig = S['T5EncoderConfig'];
+export type T5EncoderBnbQuantizedLlmInt8bModelConfig = S['T5EncoderBnbQuantizedLlmInt8bConfig'];
+export type SpandrelImageToImageModelConfig = S['SpandrelImageToImageConfig'];
+export type CheckpointModelConfig =
+  | S['MainCheckpointConfig']
+  | S['MainBnbQuantized4bCheckpointConfig']
+  | S['MainGGUFCheckpointConfig'];
+type CLIPVisionDiffusersConfig = S['CLIPVisionDiffusersConfig'];
+type SigLipModelConfig = S['SigLIPConfig'];
+export type FLUXReduxModelConfig = S['FluxReduxConfig'];
+type ApiModelConfig = S['ApiModelConfig'];
+type UnknownModelConfig = never;
 export type FLUXKontextModelConfig = MainModelConfig;
 export type ChatGPT4oModelConfig = ApiModelConfig;
 export type Gemini2_5ModelConfig = ApiModelConfig;
@@ -143,7 +175,7 @@ const checkSubmodels = (identifiers: string[], config: AnyModelConfig): boolean 
 };
 
 export const isLoRAModelConfig = (config: AnyModelConfig): config is LoRAModelConfig => {
-  return config.type === 'lora' && config.format !== 'api';
+  return config.type === 'lora' && (config.format as string) !== 'api';
 };
 
 export const isAPIModelConfig = (config: AnyModelConfig): boolean => {
@@ -273,11 +305,11 @@ export const isFluxReduxModelConfig = (config: AnyModelConfig): config is FLUXRe
 };
 
 export const isUnknownModelConfig = (config: AnyModelConfig): config is UnknownModelConfig => {
-  return config.type === 'unknown';
+  return (config.type as string) === 'unknown';
 };
 
 export const isFluxKontextModelConfig = (config: AnyModelConfig): config is FLUXKontextModelConfig => {
-  return config.type === 'main' && config.base === 'flux' && config.name.toLowerCase().includes('kontext');
+  return config.type === 'main' && config.base === 'flux' && (config.name?.toLowerCase().includes('kontext') ?? false);
 };
 
 export const isNonRefinerMainModelConfig = (config: AnyModelConfig): config is MainModelConfig => {
@@ -293,7 +325,7 @@ export const isRefinerMainModelModelConfig = (config: AnyModelConfig): config is
 };
 
 export const isFluxFillMainModelModelConfig = (config: AnyModelConfig): config is MainModelConfig => {
-  return config.type === 'main' && config.base === 'flux' && config.variant === 'dev_fill';
+  return config.type === 'main' && config.base === 'flux' && (config.variant as string) === 'dev_fill';
 };
 
 export const isTIModelConfig = (config: AnyModelConfig): config is MainModelConfig => {
@@ -414,3 +446,32 @@ export type UploadImageArg = {
 
 export type ImageUploadEntryResponse = S['ImageUploadEntry'];
 export type ImageUploadEntryRequest = paths['/api/v1/images/']['post']['requestBody']['content']['application/json'];
+
+/** @knipignore */
+export type HistoryEntry = {
+  id: number;
+  user_id: number;
+  prompt: string;
+  negative_prompt?: string;
+  model_version: string;
+  parameters?: JsonObject;
+  images?: string[];
+  cost_estimate?: number;
+  created_at: string;
+};
+
+/** @knipignore */
+export interface CreateHistoryRequest {
+  prompt: string;
+  negative_prompt?: string;
+  model_version: string;
+  parameters?: JsonObject;
+}
+
+/** @knipignore */
+export interface GetHistoryRequest {
+  limit?: number;
+  offset?: number;
+  from?: number;
+  to?: number;
+}
