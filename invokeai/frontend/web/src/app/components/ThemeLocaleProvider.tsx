@@ -6,6 +6,7 @@ import 'common/components/OverlayScrollbars/overlayscrollbars.css';
 import { ChakraProvider, DarkMode, extendTheme, theme as baseTheme, TOAST_OPTIONS } from '@invoke-ai/ui-library';
 import { useStore } from '@nanostores/react';
 import { $direction } from 'app/hooks/useSyncLangDirection';
+import { generateColorPalette } from 'app/themeUtils';
 import type { ReactNode } from 'react';
 import { memo, useMemo } from 'react';
 
@@ -14,8 +15,20 @@ type ThemeLocaleProviderProps = {
 };
 
 const buildTheme = (direction: 'ltr' | 'rtl') => {
+  const newBase = generateColorPalette(250, 15);
+  const newBaseAlpha = generateColorPalette(250, 15, true);
+  const newInvokeBlue = generateColorPalette(250, 70);
+  const newInvokeBlueAlpha = generateColorPalette(250, 70, true);
+
   return extendTheme({
     ...baseTheme,
+    colors: {
+      ...baseTheme.colors,
+      base: newBase,
+      baseAlpha: newBaseAlpha,
+      invokeBlue: newInvokeBlue,
+      invokeBlueAlpha: newInvokeBlueAlpha,
+    },
     direction,
     shadows: {
       ...baseTheme.shadows,

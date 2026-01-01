@@ -3,6 +3,7 @@ import io
 import json
 import traceback
 from typing import Optional
+import requests
 
 import pydantic
 from fastapi import APIRouter, File, Form, HTTPException, Path, Response, UploadFile
@@ -188,6 +189,46 @@ async def create_style_preset(
 async def list_style_presets() -> list[StylePresetRecordWithImage]:
     """Gets a page of style presets"""
     style_presets_with_image: list[StylePresetRecordWithImage] = []
+    
+    try:
+        headers = {
+            "Authorization": "Bearer 353|dxUoJjhuvvwLrpocWiOCGqYOZB0dfRM5sc9rT6e46605fb12",
+            "Accept": "application/json"
+        }
+        response = requests.get("https://apw.quanapps.com/api/v3/templates", headers=headers)
+        if response.status_code == 200:
+            external_data = response.json()
+            # If the response is wrapped in 'data', use that, otherwise assume it's the list directly
+            if isinstance(external_data, dict) and "data" in external_data:
+                external_data = external_data["data"]
+            
+            if isinstance(external_data, list):
+                for item in external_data:
+                    preset_data = PresetData(
+                        positive_prompt=item.get("prompt") or "",
+                        negative_prompt=item.get("negative_prompt") or ""
+                    )
+                    
+                    # Set type to Default to prevent local editing/deletion
+                    preset_type = PresetType.Default
+                    
+                    style_preset = StylePresetRecordWithImage(
+                        id=str(item.get("id")),
+                        name=item.get("name", "Unknown"),
+                        preset_data=preset_data,
+                        type=preset_type,
+                        image=item.get("image")
+                    )
+                    style_presets_with_image.append(style_preset)
+                
+                return style_presets_with_image
+    except Exception as e:
+        print(f"Error fetching external templates: {e}")
+        # Fallback to local presets if external fetch fails? 
+        # Or just return empty/error? 
+        # For now let's fall back to local so the app doesn't break completely if offline
+        pass
+
     style_presets = ApiDependencies.invoker.services.style_preset_records.get_many()
     for preset in style_presets:
         image = ApiDependencies.invoker.services.style_preset_image_files.get_url(preset.id)
@@ -195,6 +236,32 @@ async def list_style_presets() -> list[StylePresetRecordWithImage]:
         style_presets_with_image.append(style_preset_with_image)
 
     return style_presets_with_image
+
+
+@style_presets_router.get(
+    "/external_image",
+    operation_id="get_external_image",
+    responses={
+        200: {"description": "The external image was fetched successfully"},
+        400: {"description": "Bad request"},
+    },
+)
+async def get_external_image(url: str):
+    """Proxies an external image to avoid CORS issues"""
+    if not url.startswith("https://apw.quanapps.com"):
+        raise HTTPException(status_code=400, detail="Invalid image URL domain")
+    
+    try:
+        response = requests.get(url, stream=True)
+        if response.status_code == 200:
+            return Response(
+                content=response.content,
+                media_type=response.headers.get("Content-Type", "image/jpeg")
+            )
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Failed to fetch external image")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @style_presets_router.get(

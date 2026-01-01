@@ -3,7 +3,7 @@
         "about": "About",
         "createIssue": "Create Issue",
         "submitSupportTicket": "Submit Support Ticket",
-        "invokeProgressBar": "Invoke progress bar",
+        "invokeProgressBar": "QuanCreator progress bar",
         "menu": "Menu",
         "mode": "Mode",
         "nextImage": "Next Image",
@@ -454,11 +454,11 @@
         "app": {
             "title": "App",
             "invoke": {
-                "title": "Invoke",
+                "title": "QuanCreator",
                 "desc": "Queue a generation, adding it to the end of the queue."
             },
             "invokeFront": {
-                "title": "Invoke (Front)",
+                "title": "QuanCreator (Front)",
                 "desc": "Queue a generation, adding it to the front of the queue."
             },
             "cancelQueueItem": {
@@ -883,7 +883,7 @@
         "convert": "Convert",
         "convertingModelBegin": "Converting Model. Please wait.",
         "convertToDiffusers": "Convert To Diffusers",
-        "convertToDiffusersHelpText1": "This model will be converted to the 🧨 Diffusers format.",
+        "convertToDiffusersHelpText1": "This model will be converted to the \ud83e\udde8 Diffusers format.",
         "convertToDiffusersHelpText2": "This process will replace your Model Manager entry with the Diffusers version of the same model.",
         "convertToDiffusersHelpText3": "Your checkpoint file on disk WILL be deleted if it is in the QuanCreator root folder. If it is in a custom location, then it WILL NOT be deleted.",
         "convertToDiffusersHelpText4": "This is a one time process only. It might take around 30s-60s depending on the specifications of your computer.",
@@ -966,7 +966,7 @@
         "modelManager": "Model Manager",
         "modelName": "Model Name",
         "modelSettings": "Model Settings",
-        "modelSettingsWarning": "These settings tell Invoke what kind of model this is and how to load it. If Invoke didn't detect these correctly when you installed the model, or if the model is classified as Unknown, you may need to edit them manually.",
+        "modelSettingsWarning": "These settings tell QuanCreator what kind of model this is and how to load it. If QuanCreator didn't detect these correctly when you installed the model, or if the model is classified as Unknown, you may need to edit them manually.",
         "modelType": "Model Type",
         "modelUpdated": "Model Updated",
         "modelUpdateFailed": "Model Update Failed",
@@ -1288,7 +1288,7 @@
         "invoke": {
             "addingImagesTo": "Adding images to",
             "modelDisabledForTrial": "Generating with {{modelName}} is not available on trial accounts. Visit your account settings to upgrade.",
-            "invoke": "Invoke",
+            "invoke": "QuanCreator",
             "missingFieldTemplate": "Missing field template",
             "missingInputForField": "missing input",
             "missingNodeTemplate": "Missing node template",
@@ -1536,8 +1536,6 @@
         "problemUnpublishingWorkflow": "Problem Unpublishing Workflow",
         "problemUnpublishingWorkflowDescription": "There was a problem unpublishing the workflow. Please try again.",
         "workflowUnpublished": "Workflow Unpublished",
-        "sentToCanvas": "Sent to Canvas",
-        "sentToUpscale": "Sent to Upscale",
         "promptGenerationStarted": "Prompt generation started",
         "uploadAndPromptGenerationFailed": "Failed to upload image and generate prompt",
         "promptExpansionFailed": "We ran into an issue. Please try prompt expansion again.",
@@ -1654,8 +1652,8 @@
             "heading": "Begin / End Step Percentage",
             "paragraphs": [
                 "This setting determines which portion of the denoising (generation) process incorporates the guidance from this layer.",
-                "• Start Step (%): Specifies when to begin applying the guidance from this layer during the generation process.",
-                "• End Step (%): Specifies when to stop applying this layer's guidance and revert general guidance from the model and other settings."
+                "\u2022 Start Step (%): Specifies when to begin applying the guidance from this layer during the generation process.",
+                "\u2022 End Step (%): Specifies when to stop applying this layer's guidance and revert general guidance from the model and other settings."
             ]
         },
         "controlNetControlMode": {
@@ -1680,8 +1678,8 @@
             "heading": "Weight",
             "paragraphs": [
                 "Adjusts how strongly the layer influences the generation process",
-                "• Higher Weight (.75-2): Creates a more significant impact on the final result.",
-                "• Lower Weight (0-.75): Creates a smaller impact on the final result."
+                "\u2022 Higher Weight (.75-2): Creates a more significant impact on the final result.",
+                "\u2022 Lower Weight (0-.75): Creates a smaller impact on the final result."
             ]
         },
         "dynamicPrompts": {
@@ -1944,7 +1942,7 @@
         "fluxDevLicense": {
             "heading": "Non-Commercial License",
             "paragraphs": [
-                "FLUX.1 [dev] models are licensed under the FLUX [dev] non-commercial license. To use this model type for commercial purposes in Invoke, visit our website to learn more."
+                "FLUX.1 [dev] models are licensed under the FLUX [dev] non-commercial license. To use this model type for commercial purposes in QuanCreator, visit our website to learn more."
             ]
         },
         "optimizedDenoising": {
@@ -2072,7 +2070,7 @@
             "publishWarnings": "Warnings",
             "errorWorkflowHasUnsavedChanges": "Workflow has unsaved changes",
             "errorWorkflowHasUnpublishableNodes": "Workflow has batch, generator, or metadata extraction nodes",
-            "errorWorkflowHasInvalidGraph": "Workflow graph invalid (hover Invoke button for details)",
+            "errorWorkflowHasInvalidGraph": "Workflow graph invalid (hover QuanCreator button for details)",
             "errorWorkflowHasNoOutputNode": "No output node selected",
             "warningWorkflowHasNoPublishableInputFields": "No publishable input fields selected - published workflow will run with only default values",
             "warningWorkflowHasUnpublishableInputFields": "Workflow has some unpublishable inputs - these will be omitted from the published workflow",
@@ -2194,13 +2192,13 @@
         "sendingToCanvas": "Staging Generations on Canvas",
         "sendingToGallery": "Sending Generations to Gallery",
         "sendToGallery": "Send To Gallery",
-        "sendToGalleryDesc": "Pressing Invoke generates and saves a unique image to your gallery.",
+        "sendToGalleryDesc": "Pressing QuanCreator generates and saves a unique image to your gallery.",
         "sendToCanvas": "Send To Canvas",
         "newLayerFromImage": "New Layer from Image",
         "newCanvasFromImage": "New Canvas from Image",
         "newImg2ImgCanvasFromImage": "New Img2Img from Image",
         "copyToClipboard": "Copy to Clipboard",
-        "sendToCanvasDesc": "Pressing Invoke stages your work in progress on the canvas.",
+        "sendToCanvasDesc": "Pressing QuanCreator stages your work in progress on the canvas.",
         "viewProgressInViewer": "View progress and outputs in the <Btn>Image Viewer</Btn>.",
         "viewProgressOnCanvas": "View progress and stage outputs on the <Btn>Canvas</Btn>.",
         "rasterLayer_withCount_one": "$t(controlLayers.rasterLayer)",
@@ -2698,7 +2696,7 @@
             },
             "generateFromText": {
                 "title": "Generate from Text",
-                "description": "Enter a prompt and Invoke."
+                "description": "Enter a prompt and QuanCreator."
             },
             "useALayoutImage": {
                 "title": "Use a Layout Image",
@@ -2735,11 +2733,11 @@
                 },
                 "imageReady": {
                     "title": "Image Ready",
-                    "description": "Press Invoke to begin upscaling"
+                    "description": "Press QuanCreator to begin upscaling"
                 },
                 "readyToUpscale": {
                     "title": "Ready to upscale!",
-                    "description": "Configure your settings below, then click the Invoke button to begin upscaling your image."
+                    "description": "Configure your settings below, then click the QuanCreator button to begin upscaling your image."
                 },
                 "upscaleModel": "Upscale Model",
                 "model": "Model",
@@ -2785,15 +2783,15 @@
         }
     },
     "newUserExperience": {
-        "toGetStartedLocal": "To get started, make sure to download or import models needed to run Invoke. Then, enter a prompt in the box and click <StrongComponent>Invoke</StrongComponent> to generate your first image. Select a prompt template to improve results. You can choose to save your images directly to the <StrongComponent>Gallery</StrongComponent> or edit them to the <StrongComponent>Canvas</StrongComponent>.",
-        "toGetStarted": "To get started, enter a prompt in the box and click <StrongComponent>Invoke</StrongComponent> to generate your first image. Select a prompt template to improve results. You can choose to save your images directly to the <StrongComponent>Gallery</StrongComponent> or edit them to the <StrongComponent>Canvas</StrongComponent>.",
-        "toGetStartedWorkflow": "To get started, fill in the fields on the left and press <StrongComponent>Invoke</StrongComponent> to generate your image. Want to explore more workflows? Click the <StrongComponent>folder icon</StrongComponent> next to the workflow title to see a list of other templates you can try.",
-        "gettingStartedSeries": "Want more guidance? Check out our <LinkComponent>Getting Started Series</LinkComponent> for tips on unlocking the full potential of the Invoke Studio.",
+        "toGetStartedLocal": "To get started, make sure to download or import models needed to run QuanCreator. Then, enter a prompt in the box and click <StrongComponent>QuanCreator</StrongComponent> to generate your first image. Select a prompt template to improve results. You can choose to save your images directly to the <StrongComponent>Gallery</StrongComponent> or edit them to the <StrongComponent>Canvas</StrongComponent>.",
+        "toGetStarted": "To get started, enter a prompt in the box and click <StrongComponent>QuanCreator</StrongComponent> to generate your first image. Select a prompt template to improve results. You can choose to save your images directly to the <StrongComponent>Gallery</StrongComponent> or edit them to the <StrongComponent>Canvas</StrongComponent>.",
+        "toGetStartedWorkflow": "To get started, fill in the fields on the left and press <StrongComponent>QuanCreator</StrongComponent> to generate your image. Want to explore more workflows? Click the <StrongComponent>folder icon</StrongComponent> next to the workflow title to see a list of other templates you can try.",
+        "gettingStartedSeries": "Want more guidance? Check out our <LinkComponent>Getting Started Series</LinkComponent> for tips on unlocking the full potential of the QuanCreator Studio.",
         "lowVRAMMode": "For best performance, follow our <LinkComponent>Low VRAM guide</LinkComponent>.",
         "noModelsInstalled": "It looks like you don't have any models installed! You can <DownloadStarterModelsButton>download a starter model bundle</DownloadStarterModelsButton> or <ImportModelsButton>import models</ImportModelsButton>."
     },
     "whatsNew": {
-        "whatsNewInInvoke": "What's New in Invoke",
+        "whatsNewInInvoke": "What's New in QuanCreator",
         "items": [
             "Model Manager: If a model cannot be identified during installation, you can now manually select the model type and architecture.",
             "Internal: Improved model identification system, making it easier for contributors to add support for new models."
@@ -2809,12 +2807,12 @@
         "studioSessionsDesc": "Join our <DiscordLink /> to participate in the live sessions and ask questions. Sessions are uploaded to the playlist the following week.",
         "videos": {
             "gettingStarted": {
-                "title": "Getting Started with Invoke",
-                "description": "Complete video series covering everything you need to know to get started with Invoke, from creating your first image to advanced techniques."
+                "title": "Getting Started with QuanCreator",
+                "description": "Complete video series covering everything you need to know to get started with QuanCreator, from creating your first image to advanced techniques."
             },
             "studioSessions": {
                 "title": "Studio Sessions",
-                "description": "Deep dive sessions exploring advanced Invoke features, creative workflows, and community discussions."
+                "description": "Deep dive sessions exploring advanced QuanCreator features, creative workflows, and community discussions."
             }
         }
     }

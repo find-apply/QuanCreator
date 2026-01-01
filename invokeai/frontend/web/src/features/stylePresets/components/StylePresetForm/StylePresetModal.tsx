@@ -51,7 +51,11 @@ export const StylePresetModal = () => {
         let file = null;
         if (data.imageUrl) {
           try {
-            const blob = await convertImageUrlToBlob(data.imageUrl);
+            let urlToFetch = data.imageUrl;
+            if (data.imageUrl.startsWith('https://apw.quanapps.com')) {
+              urlToFetch = `/api/v1/style_presets/external_image?url=${encodeURIComponent(data.imageUrl)}`;
+            }
+            const blob = await convertImageUrlToBlob(urlToFetch);
             if (blob) {
               file = new File([blob], 'style_preset.png', { type: 'image/png' });
             }

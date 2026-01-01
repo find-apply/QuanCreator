@@ -66,3 +66,20 @@
   /* this is the tab divider */
   background-color: var(--dv-inactivegroup-tab-divider-color);
 }
+
+/* QuanCreator Theme Overrides */
+
+:root,
+.dockview-theme-invoke,
+.invokeai-root {
+  /* Brand Colors Override */
+  --invoke-colors-invokeBlue-300: #8b5cf6 !important; /* Violet */
+  --invoke-colors-invokeBlue-500: #7c3aed !important;
+  --invoke-colors-invokeBlue-700: #5b21b6 !important;
+  --invoke-colors-base-50: #f5f3ff !important;
+  --invoke-colors-base-900: #1e1b4b !important; /* Dark Indigo */
+
+  /* Accent Colors */
+  --invoke-colors-accent-100: #ede9fe !important;
+  --invoke-colors-accent-400: #a78bfa !important;
+}

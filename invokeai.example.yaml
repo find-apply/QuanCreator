@@ -57,5 +57,3 @@ remote_api_tokens:
 - url_regex: nifty-models.com
   token: some_other_token
 scan_models_on_startup: false
-unsafe_disable_picklescan: false
-allow_unknown_models: true

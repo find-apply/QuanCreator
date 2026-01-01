@@ -1,19 +1,27 @@
 import { Flex, Icon, Image, Tooltip } from '@invoke-ai/ui-library';
 import { typedMemo } from 'common/util/typedMemo';
+import { useMemo } from 'react';
 import { PiImage } from 'react-icons/pi';
 
 const IMAGE_THUMBNAIL_SIZE = '40px';
 const FALLBACK_ICON_SIZE = '24px';
 
 const StylePresetImage = ({ presetImageUrl, imageWidth }: { presetImageUrl: string | null; imageWidth?: number }) => {
+  const imageUrl = useMemo(() => {
+    if (presetImageUrl?.startsWith('https://apw.quanapps.com')) {
+      return `/api/v1/style_presets/external_image?url=${encodeURIComponent(presetImageUrl)}`;
+    }
+    return presetImageUrl;
+  }, [presetImageUrl]);
+
   return (
     <Tooltip
       closeOnScroll
       openDelay={0}
       label={
-        presetImageUrl && (
+        imageUrl && (
           <Image
-            src={presetImageUrl}
+            src={imageUrl}
             draggable={false}
             objectFit="cover"
             maxW={150}
@@ -26,7 +34,7 @@ const StylePresetImage = ({ presetImageUrl, imageWidth }: { presetImageUrl: stri
       p={2}
     >
       <Image
-        src={presetImageUrl || ''}
+        src={imageUrl || ''}
         fallbackStrategy="beforeLoadOrError"
         fallback={
           <Flex
