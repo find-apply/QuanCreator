@@ -46,3 +46,12 @@ yalc.lock
 tsconfig.vitest-temp.json
 coverage/
 *.tgz
+
+
+
+.env
+.env.*
+!.env.example
+
+# venv
+.venv

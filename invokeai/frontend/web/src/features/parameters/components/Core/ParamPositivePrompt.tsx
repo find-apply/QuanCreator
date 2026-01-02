@@ -21,6 +21,7 @@ import {
   selectStylePresetViewMode,
 } from 'features/stylePresets/store/stylePresetSlice';
 import { useRegisteredHotkeys } from 'features/system/components/HotkeysModal/useHotkeyData';
+import { TemplateGalleryButton } from 'features/template-gallery/components/TemplateGalleryButton';
 import React, { memo, useCallback, useRef } from 'react';
 import type { HotkeyCallback } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
@@ -281,6 +282,7 @@ export const ParamPositivePrompt = memo(() => {
             <Flex flexDir="column" gap={2} justifyContent="flex-start" alignItems="center">
               <AddPromptTriggerButton isOpen={isOpen} onOpen={onOpen} />
               <ShowDynamicPromptsPreviewButton />
+              <TemplateGalleryButton />
               <PositivePromptHistoryIconButton />
               {modelSupportsNegativePrompt && <NegativePromptToggleButton />}
             </Flex>

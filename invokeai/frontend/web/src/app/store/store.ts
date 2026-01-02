@@ -38,6 +38,7 @@ import { queueSliceConfig } from 'features/queue/store/queueSlice';
 import { stylePresetSliceConfig } from 'features/stylePresets/store/stylePresetSlice';
 import { hotkeysSliceConfig } from 'features/system/store/hotkeysSlice';
 import { systemSliceConfig } from 'features/system/store/systemSlice';
+import { templateGallerySliceConfig } from 'features/template-gallery/store/templateGallerySlice';
 import { uiSliceConfig } from 'features/ui/store/uiSlice';
 import { diff } from 'jsondiffpatch';
 import type { SerializeFunction, UnserializeFunction } from 'redux-remember';
@@ -75,6 +76,7 @@ const SLICE_CONFIGS = {
   [refImagesSliceConfig.slice.reducerPath]: refImagesSliceConfig,
   [stylePresetSliceConfig.slice.reducerPath]: stylePresetSliceConfig,
   [systemSliceConfig.slice.reducerPath]: systemSliceConfig,
+  [templateGallerySliceConfig.slice.reducerPath]: templateGallerySliceConfig,
   [uiSliceConfig.slice.reducerPath]: uiSliceConfig,
   [upscaleSliceConfig.slice.reducerPath]: upscaleSliceConfig,
   [workflowLibrarySliceConfig.slice.reducerPath]: workflowLibrarySliceConfig,
@@ -109,6 +111,7 @@ const ALL_REDUCERS = {
   [refImagesSliceConfig.slice.reducerPath]: refImagesSliceConfig.slice.reducer,
   [stylePresetSliceConfig.slice.reducerPath]: stylePresetSliceConfig.slice.reducer,
   [systemSliceConfig.slice.reducerPath]: systemSliceConfig.slice.reducer,
+  [templateGallerySliceConfig.slice.reducerPath]: templateGallerySliceConfig.slice.reducer,
   [uiSliceConfig.slice.reducerPath]: uiSliceConfig.slice.reducer,
   [upscaleSliceConfig.slice.reducerPath]: upscaleSliceConfig.slice.reducer,
   [workflowLibrarySliceConfig.slice.reducerPath]: workflowLibrarySliceConfig.slice.reducer,

@@ -15,6 +15,11 @@ const config: KnipConfig = {
     // Will be using this
     'src/common/hooks/useAsyncState.ts',
     'src/app/store/use-debounced-app-selector.ts',
+    // Template Gallery (WIP)
+    'src/features/template-gallery/services/apiConfig.ts',
+    'src/features/template-gallery/services/categoryService.ts',
+    'src/features/template-gallery/services/templateDataSource.ts',
+    'src/features/template-gallery/store/templateGallerySlice.ts',
   ],
   ignoreBinaries: ['only-allow'],
   ignoreDependencies: ['magic-string'],
