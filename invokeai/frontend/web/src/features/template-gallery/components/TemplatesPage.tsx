@@ -6,6 +6,7 @@ import {
   Input,
   InputGroup,
   Spinner,
+  useDisclosure,
   useToast,
 } from '@invoke-ai/ui-library';
 import { useAppDispatch } from 'app/store/storeHooks';
@@ -16,32 +17,44 @@ import { useTemplateStore } from 'features/template-gallery/store/useTemplateSto
 import type { PromptCategory, PromptTemplate } from 'features/template-gallery/types';
 import { navigationApi } from 'features/ui/layouts/navigation-api';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { PiPlusBold } from 'react-icons/pi';
+import { PiFolderBold, PiPlusBold } from 'react-icons/pi';
 
 import { buildCategoryLookupFromTree, buildCategoryTree, calculateTemplateCounts, CategoryTab, getAllDescendantIds } from './CategoryTab';
+import { ManageCategoriesModal } from './ManageCategoriesModal';
 import { TemplateCard } from './TemplateCard';
+import { TemplateFormModal } from './TemplateFormModal';
 
 export const TemplatesPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const toast = useToast();
-  const { templates, loading, fetchTemplates, deleteTemplate, activeTemplateId, setActiveTemplate } =
+  const { templates, loading, fetchTemplates, createTemplate, updateTemplate, deleteTemplate, activeTemplateId, setActiveTemplate } =
     useTemplateStore();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [categoryTree, setCategoryTree] = useState<PromptCategory[]>([]);
   const [categoryLookup, setCategoryLookup] = useState<Map<string, PromptCategory>>(new Map());
+  const [allCategories, setAllCategories] = useState<PromptCategory[]>([]);
 
-  useEffect(() => {
-    fetchTemplates();
+  const { isOpen: isCreateOpen, onOpen: onCreateOpen, onClose: onCreateClose } = useDisclosure();
+  const { isOpen: isManageCategoriesOpen, onOpen: onManageCategoriesOpen, onClose: onManageCategoriesClose } = useDisclosure();
+  const [editingTemplate, setEditingTemplate] = useState<PromptTemplate | undefined>(undefined);
+
+  const loadCategories = useCallback(() => {
     fetchCategoryData().then((cats) => {
+      setAllCategories(cats);
       // Build hierarchical tree
       const tree = buildCategoryTree(cats);
       setCategoryTree(tree);
       // Build lookup from tree to preserve children references
       setCategoryLookup(buildCategoryLookupFromTree(tree));
     });
-  }, [fetchTemplates]);
+  }, []);
+
+  useEffect(() => {
+    fetchTemplates();
+    loadCategories();
+  }, [fetchTemplates, loadCategories]);
 
   // Get all category IDs to filter by (including descendants)
   const filterCategoryIds = useMemo(() => {
@@ -143,28 +156,52 @@ export const TemplatesPage: React.FC = () => {
   }, []);
 
   const handleCreateTemplate = useCallback(() => {
-    alert('Create Template Modal not implemented yet');
-  }, []);
+    setEditingTemplate(undefined);
+    onCreateOpen();
+  }, [onCreateOpen]);
 
   const handleDuplicate = useCallback(() => {
     // noop
   }, []);
 
-  const handleEdit = useCallback(() => {
-    // noop
-  }, []);
+  const handleEdit = useCallback(
+    (template: PromptTemplate) => {
+      setEditingTemplate(template);
+      onCreateOpen();
+    },
+    [onCreateOpen]
+  );
 
   const handleView = useCallback(() => {
     // noop
   }, []);
 
+  const handleTemplateSubmit = async (data: any) => {
+    try {
+      if (editingTemplate) {
+        await updateTemplate(editingTemplate.id, data);
+        toast({ title: 'Template updated', status: 'success' });
+      } else {
+        await createTemplate(data);
+        toast({ title: 'Template created', status: 'success' });
+      }
+    } catch (error) {
+      toast({ title: 'Error saving template', status: 'error' });
+    }
+  };
+
   return (
     <Flex direction="column" w="full" h="full" p={6} gap={4} overflow="hidden" bg="base.900">
       <Flex justify="space-between" align="center">
         <Heading size="lg">Template Gallery</Heading>
-        <Button leftIcon={<PiPlusBold />} colorScheme="invokeBlue" onClick={handleCreateTemplate}>
-          Create Template
-        </Button>
+        <Flex gap={2}>
+          <Button leftIcon={<PiFolderBold />} onClick={onManageCategoriesOpen}>
+            Manage Categories
+          </Button>
+          <Button leftIcon={<PiPlusBold />} colorScheme="invokeBlue" onClick={handleCreateTemplate}>
+            Create Template
+          </Button>
+        </Flex>
       </Flex>
 
       <Flex justify="space-between" align="center" gap={4}>
@@ -227,6 +264,21 @@ export const TemplatesPage: React.FC = () => {
           ))}
         </Grid>
       )}
+
+      <TemplateFormModal
+        isOpen={isCreateOpen}
+        onClose={onCreateClose}
+        template={editingTemplate}
+        onSubmit={handleTemplateSubmit}
+        categories={allCategories}
+        isLoading={loading.create || loading.update}
+      />
+
+      <ManageCategoriesModal
+        isOpen={isManageCategoriesOpen}
+        onClose={onManageCategoriesClose}
+        onCategoriesChanged={loadCategories}
+      />
     </Flex>
   );
 };
