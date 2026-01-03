@@ -37,6 +37,10 @@ export default defineConfig(({ mode }) => {
         },
       },
       host: '0.0.0.0',
+      watch: {
+        usePolling: true,
+        interval: 1000,
+      },
     },
     test: {
       typecheck: {

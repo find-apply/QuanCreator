@@ -19,7 +19,6 @@ import StylePresetImage from './StylePresetImage';
 export const ActiveStylePreset = () => {
   const viewMode = useAppSelector(selectStylePresetViewMode);
   const activeStylePresetId = useAppSelector(selectStylePresetActivePresetId);
-
   const { activeStylePreset } = useListStylePresetsQuery(undefined, {
     selectFromResult: ({ data }) => {
       let activeStylePreset = null;

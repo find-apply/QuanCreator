@@ -1,6 +1,6 @@
-export const getStoredBackendUrl = (): string => '';
+export const getStoredBackendUrl = (): string => 'https://apw.quanapps.com';
 
-export const getStoredApiKey = (): string | null => null;
+export const getStoredApiKey = (): string | null => '360|ZRJ76h5eHHDICDWPZ6UywR8D8nvjHMf691oSIKZV535d04c8';
 
 export const joinBackendPath = (path: string): string => {
   if (!path) {
@@ -14,7 +14,9 @@ export const joinBackendPath = (path: string): string => {
   ) {
     return path;
   }
-  return path;
+  // Ensure path starts with /
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${getStoredBackendUrl()}${normalizedPath}`;
 };
 
 export const buildJsonHeaders = (): Record<string, string> => {

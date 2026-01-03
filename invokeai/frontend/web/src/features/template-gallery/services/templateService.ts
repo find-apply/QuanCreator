@@ -41,7 +41,7 @@ export interface TemplateUpdateRequest {
 const getAuthHeaders = (): Record<string, string> => {
   return {
     'Content-Type': 'application/json',
-    // TODO: Add auth token
+    Authorization: 'Bearer 360|ZRJ76h5eHHDICDWPZ6UywR8D8nvjHMf691oSIKZV535d04c8',
   };
 };
 

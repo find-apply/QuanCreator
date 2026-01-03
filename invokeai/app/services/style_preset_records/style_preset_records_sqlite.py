@@ -158,8 +158,8 @@ class SqliteStylePresetRecordsStorage(StylePresetRecordsStorageBase):
                 """
             )
         # Next, parse and create the default style presets
-        with open(Path(__file__).parent / Path("default_style_presets.json"), "r") as file:
-            presets = json.load(file)
-            for preset in presets:
-                style_preset = StylePresetWithoutId.model_validate(preset)
-                self.create(style_preset)
+        # with open(Path(__file__).parent / Path("default_style_presets.json"), "r") as file:
+        #     presets = json.load(file)
+        #     for preset in presets:
+        #         style_preset = StylePresetWithoutId.model_validate(preset)
+        #         self.create(style_preset)

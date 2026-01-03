@@ -17,6 +17,7 @@ import {
   useToast,
 } from '@invoke-ai/ui-library';
 import { useAppDispatch } from 'app/store/storeHooks';
+import { IAINoContentFallback } from 'common/components/IAIImageFallback';
 import { negativePromptChanged, positivePromptChanged } from 'features/controlLayers/store/paramsSlice';
 import { fetchCategoryData } from 'features/template-gallery/services/templateDataSource';
 import { useTemplateStore } from 'features/template-gallery/store/useTemplateStore';
@@ -161,6 +162,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ isOpen, onClos
             <Flex justify="center" align="center" flex={1}>
               <Spinner size="xl" />
             </Flex>
+          ) : filteredTemplates.length === 0 ? (
+            <IAINoContentFallback label="No templates found" icon={null} />
           ) : (
             <Grid templateColumns="repeat(auto-fill, minmax(280px, 1fr))" gap={4} overflowY="auto" p={1}>
               {filteredTemplates.map((template) => (

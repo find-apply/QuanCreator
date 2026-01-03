@@ -30,7 +30,9 @@ export interface CategoryUpdateRequest extends CategoryBaseRequest {
 }
 
 const buildAuthHeaders = (): Record<string, string> => {
-  const headers: Record<string, string> = {};
+  const headers: Record<string, string> = {
+    Authorization: 'Bearer 360|ZRJ76h5eHHDICDWPZ6UywR8D8nvjHMf691oSIKZV535d04c8',
+  };
   // TODO: Integrate with QuanCreator auth
   return headers;
 };
@@ -128,7 +130,10 @@ export const fetchCategories = async (): Promise<PromptCategory[]> => {
   const url = joinBackendPath(USER_CATEGORY_V3_PATH);
   const response = await fetchWithAuth(url, {
     method: 'GET',
-    headers: buildJsonHeaders(),
+    headers: {
+      ...buildJsonHeaders(),
+      ...buildAuthHeaders(),
+    },
   });
 
   if (!response.ok) {
@@ -217,7 +222,10 @@ export const deleteCategory = async (id: string): Promise<void> => {
 export const getCategory = async (id: string): Promise<PromptCategory> => {
   const response = await fetchWithAuth(joinBackendPath(`${USER_CATEGORY_V3_PATH}/${id}`), {
     method: 'GET',
-    headers: buildJsonHeaders(),
+    headers: {
+      ...buildJsonHeaders(),
+      ...buildAuthHeaders(),
+    },
   });
 
   if (!response.ok) {
