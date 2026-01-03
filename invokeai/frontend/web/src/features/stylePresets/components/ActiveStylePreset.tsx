@@ -1,13 +1,11 @@
-import { Badge, Flex, IconButton, Spacer, Text, Tooltip } from '@invoke-ai/ui-library';
+import { Badge, Box, Flex, Icon, IconButton, Image, Spacer, Text, Tooltip } from '@invoke-ai/ui-library';
 import { useAppDispatch, useAppSelector } from 'app/store/storeHooks';
 import { selectStylePresetViewMode, viewModeChanged } from 'features/stylePresets/store/stylePresetSlice';
 import { useTemplateStore } from 'features/template-gallery/store/useTemplateStore';
 import type { MouseEventHandler } from 'react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PiEyeBold, PiStackSimpleBold, PiXBold } from 'react-icons/pi';
-
-import StylePresetImage from './StylePresetImage';
+import { PiEyeBold, PiImage, PiStackSimpleBold, PiXBold } from 'react-icons/pi';
 
 export const ActiveStylePreset = () => {
   const viewMode = useAppSelector(selectStylePresetViewMode);
@@ -54,7 +52,25 @@ export const ActiveStylePreset = () => {
   }
   return (
     <Flex w="full" alignItems="center" gap={2} minW={0}>
-      <StylePresetImage imageWidth={25} presetImageUrl={activeTemplate.image || null} />
+      <Box position="relative" w="25px" h="25px" minW="25px" borderRadius="base" overflow="hidden" bg="base.200">
+        {activeTemplate.image ? (
+          <Image
+            src={activeTemplate.image}
+            w="100%"
+            h="100%"
+            objectFit="cover"
+            fallback={
+              <Flex w="100%" h="100%" align="center" justify="center">
+                <Icon as={PiImage} boxSize={4} color="base.500" />
+              </Flex>
+            }
+          />
+        ) : (
+          <Flex w="100%" h="100%" align="center" justify="center">
+            <Icon as={PiImage} boxSize={4} color="base.500" />
+          </Flex>
+        )}
+      </Box>
       <Badge colorScheme="invokeBlue" variant="subtle" justifySelf="flex-start">
         {activeTemplate.name}
       </Badge>
