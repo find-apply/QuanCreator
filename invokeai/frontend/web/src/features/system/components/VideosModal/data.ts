@@ -13,13 +13,13 @@ export type VideoData = {
 export const supportVideos: VideoData[] = [
   {
     tKey: 'gettingStarted',
-    link: 'https://www.youtube.com/playlist?list=PLvWK1Kc8iXGrQy8r9TYg6QdUuJ5MMx-ZO',
+    link: 'https://www.youtube.com/',
   },
   {
     tKey: 'studioSessions',
-    link: 'https://www.youtube.com/playlist?list=PLvWK1Kc8iXGq_8tWZqnwDVaf9uhlDC09U',
+    link: 'https://www.youtube.com/',
   },
 ];
 
-export const gettingStartedPlaylistLink = 'https://www.youtube.com/playlist?list=PLvWK1Kc8iXGrQy8r9TYg6QdUuJ5MMx-ZO';
-export const studioSessionsPlaylistLink = 'https://www.youtube.com/playlist?list=PLvWK1Kc8iXGq_8tWZqnwDVaf9uhlDC09U';
+export const gettingStartedPlaylistLink = 'https://www.youtube.com/';
+export const studioSessionsPlaylistLink = 'https://www.youtube.com/';

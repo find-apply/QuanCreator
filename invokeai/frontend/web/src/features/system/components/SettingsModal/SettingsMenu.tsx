@@ -48,7 +48,7 @@ const SettingsMenu = () => {
       />
       <Portal>
         <MenuList>
-          <MenuGroup title={t('common.communityLabel')}>
+          {/* <MenuGroup title={t('common.communityLabel')}>
             <MenuItem as="a" href={githubLink} target="_blank" icon={<RiGithubFill />}>
               {t('common.githubLabel')}
             </MenuItem>
@@ -58,7 +58,7 @@ const SettingsMenu = () => {
             <MenuItem as="a" href={discordLink} target="_blank" icon={<RiDiscordFill />}>
               {t('common.discordLabel')}
             </MenuItem>
-          </MenuGroup>
+          </MenuGroup> */}
 
           <MenuGroup title={t('common.settingsLabel')}>
             <HotkeysModal>

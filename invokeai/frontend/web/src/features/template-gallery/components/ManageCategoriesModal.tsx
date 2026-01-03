@@ -12,6 +12,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   Table,
   Tbody,
   Td,
@@ -39,15 +40,18 @@ interface ManageCategoriesModalProps {
 
 export const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ isOpen, onClose, onCategoriesChanged }) => {
   const [categories, setCategories] = useState<PromptCategory[]>([]);
+  const [allCategories, setAllCategories] = useState<PromptCategory[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingCategory, setEditingCategory] = useState<PromptCategory | null>(null);
   const [name, setName] = useState('');
+  const [parentId, setParentId] = useState<string>('');
   const toast = useToast();
 
   const loadCategories = async () => {
     setLoading(true);
     try {
       const data = await fetchCategoryData();
+      setAllCategories(data);
       setCategories(data.filter((cat) => cat.type === 'user'));
     } catch (error) {
       toast({
@@ -70,13 +74,14 @@ export const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ is
 
     try {
       if (editingCategory) {
-        await updateCategoryData(editingCategory.id, { name });
+        await updateCategoryData(editingCategory.id, { name, parentId: parentId || null });
         toast({ title: 'Category updated', status: 'success' });
       } else {
-        await createCategoryData({ name, type: 'user' });
+        await createCategoryData({ name, type: 'user', parentId: parentId || null });
         toast({ title: 'Category created', status: 'success' });
       }
       setName('');
+      setParentId('');
       setEditingCategory(null);
       loadCategories();
       onCategoriesChanged();
@@ -88,6 +93,7 @@ export const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ is
   const handleEdit = (category: PromptCategory) => {
     setEditingCategory(category);
     setName(category.name);
+    setParentId(category.parentId || '');
   };
 
   const handleDelete = async (id: string) => {
@@ -105,6 +111,7 @@ export const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ is
   const handleCancelEdit = () => {
     setEditingCategory(null);
     setName('');
+    setParentId('');
   };
 
   return (
@@ -115,10 +122,27 @@ export const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ is
         <ModalCloseButton />
         <ModalBody>
           <VStack spacing={4} align="stretch">
-            <Flex gap={2} alignItems="flex-end">
-              <FormControl>
+            <Flex gap={2} alignItems="flex-end" wrap="wrap">
+              <FormControl flex="1">
                 <FormLabel>{editingCategory ? 'Edit Category' : 'New Category'}</FormLabel>
                 <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Category Name" />
+              </FormControl>
+              <FormControl flex="1">
+                <FormLabel>Parent Category</FormLabel>
+                <Select
+                  value={parentId}
+                  onChange={(e) => setParentId(e.target.value)}
+                  placeholder="Select parent (optional)"
+                >
+                  <option value="">None</option>
+                  {allCategories
+                    .filter((c) => c.id !== editingCategory?.id) // Prevent selecting self as parent
+                    .map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                </Select>
               </FormControl>
               <Button onClick={handleSave} colorScheme="invokeBlue">
                 {editingCategory ? 'Update' : 'Add'}

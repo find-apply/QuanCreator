@@ -28,18 +28,7 @@ export const WhatsNew = () => {
     <Flex gap={4} flexDir="column">
       <UnorderedList fontSize="sm">{items}</UnorderedList>
       <Flex flexDir="column" gap={1}>
-        <ExternalLink
-          fontSize="sm"
-          fontWeight="semibold"
-          label={t('whatsNew.readReleaseNotes')}
-          href={`https://github.com/invoke-ai/InvokeAI/releases/tag/v${data?.version}`}
-        />
-        <ExternalLink
-          fontSize="sm"
-          fontWeight="semibold"
-          label={t('whatsNew.watchRecentReleaseVideos')}
-          href="https://www.youtube.com/@invokeai/videos"
-        />
+    
       </Flex>
     </Flex>
   );
