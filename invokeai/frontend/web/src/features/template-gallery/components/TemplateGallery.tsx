@@ -19,6 +19,7 @@ import { negativePromptChanged, positivePromptChanged } from 'features/controlLa
 import { fetchCategoryData } from 'features/template-gallery/services/templateDataSource';
 import { useTemplateStore } from 'features/template-gallery/store/useTemplateStore';
 import type { PromptCategory, PromptTemplate } from 'features/template-gallery/types';
+import { navigationApi } from 'features/ui/layouts/navigation-api';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { PiPlusBold } from 'react-icons/pi';
 
@@ -110,9 +111,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ isOpen, onClos
   const handleSelectTemplate = useCallback(
     (template: PromptTemplate) => {
       dispatch(positivePromptChanged(template.positivePrompt));
-      if (template.negativePrompt) {
-        dispatch(negativePromptChanged(template.negativePrompt));
-      }
+      dispatch(negativePromptChanged(template.negativePrompt || ''));
       setActiveTemplate(template.id);
       onClose();
       toast({

@@ -103,9 +103,7 @@ export const TemplatesPage: React.FC = () => {
   const handleSelectTemplate = useCallback(
     (template: PromptTemplate) => {
       dispatch(positivePromptChanged(template.positivePrompt));
-      if (template.negativePrompt) {
-        dispatch(negativePromptChanged(template.negativePrompt));
-      }
+      dispatch(negativePromptChanged(template.negativePrompt || ''));
       setActiveTemplate(template.id);
       // Navigate to generate tab after selecting a template
       navigationApi.switchToTab('generate');

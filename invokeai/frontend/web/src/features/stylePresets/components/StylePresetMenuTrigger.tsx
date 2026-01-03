@@ -1,12 +1,9 @@
 import type { SystemStyleObject } from '@invoke-ai/ui-library';
 import { Flex, IconButton, useDisclosure } from '@invoke-ai/ui-library';
 import { useStore } from '@nanostores/react';
-import { useAppSelector } from 'app/store/storeHooks';
-import {
-  $isStylePresetsMenuOpen,
-  selectStylePresetActivePresetId,
-} from 'features/stylePresets/store/stylePresetSlice';
+import { $isStylePresetsMenuOpen } from 'features/stylePresets/store/stylePresetSlice';
 import { TemplateGallery } from 'features/template-gallery/components/TemplateGallery';
+import { useTemplateStore } from 'features/template-gallery/store/useTemplateStore';
 import type { MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +18,7 @@ const _hover: SystemStyleObject = {
 export const StylePresetMenuTrigger = () => {
   const isMenuOpen = useStore($isStylePresetsMenuOpen);
   const { t } = useTranslation();
-  const activeStylePresetId = useAppSelector(selectStylePresetActivePresetId);
+  const { activeTemplateId } = useTemplateStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleToggle = useCallback(() => {
@@ -29,12 +26,8 @@ export const StylePresetMenuTrigger = () => {
   }, [isMenuOpen]);
 
   const handleClick = useCallback(() => {
-    if (!activeStylePresetId) {
-      onOpen();
-    } else {
-      handleToggle();
-    }
-  }, [activeStylePresetId, handleToggle, onOpen]);
+    onOpen();
+  }, [onOpen]);
 
   const handleChevronClick = useCallback(
     (e: MouseEvent) => {
