@@ -11,18 +11,9 @@ import {
 } from '@invoke-ai/ui-library';
 import AboutModal from 'features/system/components/AboutModal/AboutModal';
 import HotkeysModal from 'features/system/components/HotkeysModal/HotkeysModal';
-import { discordLink, githubLink } from 'features/system/store/constants';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  PiBugBeetleBold,
-  PiGearSixFill,
-  PiInfoBold,
-  PiKeyboardBold,
-  PiSignOutBold,
-  PiToggleRightFill,
-} from 'react-icons/pi';
-import { RiDiscordFill, RiGithubFill } from 'react-icons/ri';
+import { PiGearSixFill, PiInfoBold, PiKeyboardBold, PiSignOutBold, PiToggleRightFill } from 'react-icons/pi';
 import { useLogoutMutation } from 'services/api/endpoints/auth';
 
 import SettingsModal from './SettingsModal';

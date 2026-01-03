@@ -37,3 +37,11 @@ export interface PromptTemplate {
   categoryIds?: string[];
   categories?: PromptCategory[];
 }
+
+export interface TemplateFormData {
+  name: string;
+  description: string;
+  positivePrompt: string;
+  negativePrompt: string;
+  categoryIds: string[];
+}

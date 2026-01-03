@@ -10,7 +10,6 @@ import {
   PiCubeBold,
   PiFlowArrowBold,
   PiFrameCornersBold,
-  PiNotebookBold,
   PiQueueBold,
   PiTextAaBold,
 } from 'react-icons/pi';

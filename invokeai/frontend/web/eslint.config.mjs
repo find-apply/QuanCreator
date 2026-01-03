@@ -13,6 +13,9 @@ import pluginUnusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 
 export default [
+  {
+    ignores: ['.venv/', 'node_modules/', 'dist/', 'coverage/'],
+  },
   js.configs.recommended,
 
   {

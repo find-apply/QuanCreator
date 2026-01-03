@@ -1,14 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Portal,
-  Text,
-} from '@invoke-ai/ui-library';
+import { Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList, Portal, Text } from '@invoke-ai/ui-library';
 import type { PromptCategory } from 'features/template-gallery/types';
 import React, { memo, useCallback } from 'react';
 import { PiCaretDownBold } from 'react-icons/pi';
@@ -57,30 +47,29 @@ const NestedMenuItem = memo(
           >
             <Flex align="center" gap={2} flex={1}>
               {category.emoji && <Text>{category.emoji}</Text>}
-              <Text fontSize="sm" noOfLines={1}>{category.name}</Text>
+              <Text fontSize="sm" noOfLines={1}>
+                {category.name}
+              </Text>
               {count > 0 && (
-                <Text fontSize="xs" color="base.400" fontWeight="normal">({count})</Text>
+                <Text fontSize="xs" color="base.400" fontWeight="normal">
+                  ({count})
+                </Text>
               )}
             </Flex>
             <PiCaretDownBold style={{ transform: 'rotate(-90deg)', flexShrink: 0 }} />
           </MenuButton>
           <Portal>
-            <MenuList 
-              bg="base.800" 
-              borderColor="base.600" 
-              minW="220px" 
+            <MenuList
+              bg="base.800"
+              borderColor="base.600"
+              minW="220px"
               maxH="400px"
               overflowY="auto"
               zIndex={1500 + depth * 10}
               boxShadow="lg"
             >
               {/* Option to select the parent category itself */}
-              <MenuItem
-                onClick={handleClick}
-                bg="base.800"
-                _hover={{ bg: 'invokeBlue.700' }}
-                fontWeight="semibold"
-              >
+              <MenuItem onClick={handleClick} bg="base.800" _hover={{ bg: 'invokeBlue.700' }} fontWeight="semibold">
                 <Flex align="center" gap={2}>
                   {category.emoji && <Text>{category.emoji}</Text>}
                   <Text fontSize="sm">All in {category.name}</Text>
@@ -103,19 +92,18 @@ const NestedMenuItem = memo(
     }
 
     return (
-      <MenuItem 
-        onClick={handleClick} 
-        bg="base.800" 
-        _hover={{ bg: 'base.700' }}
-        pl={3 + depth * 2}
-      >
+      <MenuItem onClick={handleClick} bg="base.800" _hover={{ bg: 'base.700' }} pl={3 + depth * 2}>
         <Flex align="center" gap={2} justify="space-between" w="full">
           <Flex align="center" gap={2}>
             {category.emoji && <Text>{category.emoji}</Text>}
-            <Text fontSize="sm" noOfLines={1}>{category.name}</Text>
+            <Text fontSize="sm" noOfLines={1}>
+              {category.name}
+            </Text>
           </Flex>
           {count > 0 && (
-            <Text fontSize="xs" color="base.400">({count})</Text>
+            <Text fontSize="xs" color="base.400">
+              ({count})
+            </Text>
           )}
         </Flex>
       </MenuItem>
@@ -155,19 +143,16 @@ export const CategoryTab = memo(({ category, isSelected, onSelect, templateCount
             {category.emoji && <Text>{category.emoji}</Text>}
             <Text>{category.name}</Text>
             {count > 0 && (
-              <Text fontSize="xs" color={isSelected ? 'white' : 'base.400'} fontWeight="normal">({count})</Text>
+              <Text fontSize="xs" color={isSelected ? 'white' : 'base.400'} fontWeight="normal">
+                ({count})
+              </Text>
             )}
           </Flex>
         </MenuButton>
         <Portal>
           <MenuList bg="base.800" borderColor="base.600" minW="200px" zIndex={1400}>
             {/* Option to select the parent category itself */}
-            <MenuItem
-              onClick={handleSelectParent}
-              bg="base.800"
-              _hover={{ bg: 'base.700' }}
-              fontWeight="semibold"
-            >
+            <MenuItem onClick={handleSelectParent} bg="base.800" _hover={{ bg: 'base.700' }} fontWeight="semibold">
               <Flex align="center" gap={2}>
                 {category.emoji && <Text>{category.emoji}</Text>}
                 <Text fontSize="sm">All in {category.name}</Text>
@@ -175,7 +160,12 @@ export const CategoryTab = memo(({ category, isSelected, onSelect, templateCount
             </MenuItem>
             {/* Child categories */}
             {category.children!.map((child) => (
-              <NestedMenuItem key={child.id} category={child} onSelect={handleSelectCategory} templateCounts={templateCounts} />
+              <NestedMenuItem
+                key={child.id}
+                category={child}
+                onSelect={handleSelectCategory}
+                templateCounts={templateCounts}
+              />
             ))}
           </MenuList>
         </Portal>
@@ -196,7 +186,9 @@ export const CategoryTab = memo(({ category, isSelected, onSelect, templateCount
         {category.emoji && <Text>{category.emoji}</Text>}
         <Text>{category.name}</Text>
         {count > 0 && (
-          <Text fontSize="xs" color={isSelected ? 'white' : 'base.400'} fontWeight="normal">({count})</Text>
+          <Text fontSize="xs" color={isSelected ? 'white' : 'base.400'} fontWeight="normal">
+            ({count})
+          </Text>
         )}
       </Flex>
     </Button>

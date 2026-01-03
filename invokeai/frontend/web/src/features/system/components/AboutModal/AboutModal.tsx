@@ -44,8 +44,8 @@ const AboutModal = ({ children }: AboutModalProps) => {
               {appVersion && <Text>{`v${appVersion?.version}`}</Text>}
               <Heading fontSize="large">Quanticreator App</Heading>
               <Text fontSize="sm" textAlign="center">
-                Quanticreator is a powerful AI-driven creative suite designed to empower artists and designers.
-                Unleash your creativity with our advanced tools and features.
+                Quanticreator is a powerful AI-driven creative suite designed to empower artists and designers. Unleash
+                your creativity with our advanced tools and features.
               </Text>
             </Flex>
           </ModalBody>

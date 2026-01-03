@@ -13,6 +13,7 @@ import {
   PiCubeBold,
   PiFlowArrowBold,
   PiFrameCornersBold,
+  PiNotebookBold,
   PiQueueBold,
   PiTextAaBold,
 } from 'react-icons/pi';
@@ -24,6 +25,7 @@ const TAB_ICONS: Record<TabName, IconType> = {
   canvas: PiBoundingBoxBold,
   upscaling: PiFrameCornersBold,
   workflows: PiFlowArrowBold,
+  templates: PiNotebookBold,
   models: PiCubeBold,
   queue: PiQueueBold,
 };

@@ -19,12 +19,17 @@ import { IAINoContentFallback } from 'common/components/IAIImageFallback';
 import { negativePromptChanged, positivePromptChanged } from 'features/controlLayers/store/paramsSlice';
 import { fetchCategoryData } from 'features/template-gallery/services/templateDataSource';
 import { useTemplateStore } from 'features/template-gallery/store/useTemplateStore';
-import type { PromptCategory, PromptTemplate } from 'features/template-gallery/types';
-import { navigationApi } from 'features/ui/layouts/navigation-api';
+import type { PromptCategory, PromptTemplate, TemplateFormData } from 'features/template-gallery/types';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { PiFolderBold, PiPlusBold } from 'react-icons/pi';
 
-import { buildCategoryLookupFromTree, buildCategoryTree, calculateTemplateCounts, CategoryTab, getAllDescendantIds } from './CategoryTab';
+import {
+  buildCategoryLookupFromTree,
+  buildCategoryTree,
+  calculateTemplateCounts,
+  CategoryTab,
+  getAllDescendantIds,
+} from './CategoryTab';
 import { ManageCategoriesModal } from './ManageCategoriesModal';
 import { TemplateCard } from './TemplateCard';
 import { TemplateFormModal } from './TemplateFormModal';
@@ -37,8 +42,16 @@ interface TemplateGalleryProps {
 export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ isOpen, onClose }) => {
   const dispatch = useAppDispatch();
   const toast = useToast();
-  const { templates, loading, fetchTemplates, createTemplate, updateTemplate, deleteTemplate, activeTemplateId, setActiveTemplate } =
-    useTemplateStore();
+  const {
+    templates,
+    loading,
+    fetchTemplates,
+    createTemplate,
+    updateTemplate,
+    deleteTemplate,
+    activeTemplateId,
+    setActiveTemplate,
+  } = useTemplateStore();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
@@ -47,8 +60,13 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ isOpen, onClos
   const [allCategories, setAllCategories] = useState<PromptCategory[]>([]);
 
   const { isOpen: isCreateOpen, onOpen: onCreateOpen, onClose: onCreateClose } = useDisclosure();
-  const { isOpen: isManageCategoriesOpen, onOpen: onManageCategoriesOpen, onClose: onManageCategoriesClose } = useDisclosure();
+  const {
+    isOpen: isManageCategoriesOpen,
+    onOpen: onManageCategoriesOpen,
+    onClose: onManageCategoriesClose,
+  } = useDisclosure();
   const [editingTemplate, setEditingTemplate] = useState<PromptTemplate | undefined>(undefined);
+  const [modalMode, setModalMode] = useState<'create' | 'edit' | 'duplicate' | 'view'>('create');
 
   const loadCategories = useCallback(() => {
     fetchCategoryData().then((cats) => {
@@ -168,38 +186,53 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ isOpen, onClos
 
   const handleCreateTemplate = useCallback(() => {
     setEditingTemplate(undefined);
+    setModalMode('create');
     onCreateOpen();
   }, [onCreateOpen]);
 
-  const handleDuplicate = useCallback(() => {
-    // noop
-  }, []);
-
-  const handleEdit = useCallback(
+  const handleDuplicate = useCallback(
     (template: PromptTemplate) => {
       setEditingTemplate(template);
+      setModalMode('duplicate');
       onCreateOpen();
     },
     [onCreateOpen]
   );
 
-  const handleView = useCallback(() => {
-    // noop
-  }, []);
+  const handleEdit = useCallback(
+    (template: PromptTemplate) => {
+      setEditingTemplate(template);
+      setModalMode('edit');
+      onCreateOpen();
+    },
+    [onCreateOpen]
+  );
 
-  const handleTemplateSubmit = async (data: any) => {
-    try {
-      if (editingTemplate) {
-        await updateTemplate(editingTemplate.id, data);
-        toast({ title: 'Template updated', status: 'success' });
-      } else {
-        await createTemplate(data);
-        toast({ title: 'Template created', status: 'success' });
+  const handleView = useCallback(
+    (template: PromptTemplate) => {
+      setEditingTemplate(template);
+      setModalMode('view');
+      onCreateOpen();
+    },
+    [onCreateOpen]
+  );
+
+  const handleTemplateSubmit = useCallback(
+    async (data: TemplateFormData) => {
+      try {
+        if (modalMode === 'edit' && editingTemplate) {
+          await updateTemplate(editingTemplate.id, data);
+          toast({ title: 'Template updated', status: 'success' });
+        } else if (modalMode === 'create' || modalMode === 'duplicate') {
+          await createTemplate(data);
+          toast({ title: 'Template created', status: 'success' });
+        }
+      } catch {
+        toast({ title: 'Error saving template', status: 'error' });
       }
-    } catch (error) {
-      toast({ title: 'Error saving template', status: 'error' });
-    }
-  };
+    },
+    [modalMode, editingTemplate, updateTemplate, toast, createTemplate]
+  );
 
   return (
     <>
@@ -288,6 +321,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ isOpen, onClos
         onSubmit={handleTemplateSubmit}
         categories={allCategories}
         isLoading={loading.create || loading.update}
+        mode={modalMode}
       />
 
       <ManageCategoriesModal

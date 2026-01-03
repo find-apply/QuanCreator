@@ -89,9 +89,7 @@ export const appInfoApi = api.injectEndpoints({
 
 export const {
   useGetAppVersionQuery,
-  useGetAppDepsQuery,
   useGetPatchmatchStatusQuery,
-  useGetRuntimeConfigQuery,
   useClearInvocationCacheMutation,
   useDisableInvocationCacheMutation,
   useEnableInvocationCacheMutation,

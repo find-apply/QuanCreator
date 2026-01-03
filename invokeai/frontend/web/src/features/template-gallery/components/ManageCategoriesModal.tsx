@@ -29,8 +29,31 @@ import {
   updateCategoryData,
 } from 'features/template-gallery/services/templateDataSource';
 import type { PromptCategory } from 'features/template-gallery/types';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { PiPencilBold, PiTrashBold } from 'react-icons/pi';
+
+interface CategoryRowProps {
+  category: PromptCategory;
+  onEdit: (category: PromptCategory) => void;
+  onDelete: (id: string) => void;
+}
+
+const CategoryRow: React.FC<CategoryRowProps> = ({ category, onEdit, onDelete }) => {
+  const handleEdit = useCallback(() => onEdit(category), [category, onEdit]);
+  const handleDelete = useCallback(() => onDelete(category.id), [category.id, onDelete]);
+
+  return (
+    <Tr>
+      <Td>{category.name}</Td>
+      <Td>
+        <Flex gap={2}>
+          <IconButton aria-label="Edit" icon={<PiPencilBold />} size="sm" onClick={handleEdit} />
+          <IconButton aria-label="Delete" icon={<PiTrashBold />} size="sm" colorScheme="red" onClick={handleDelete} />
+        </Flex>
+      </Td>
+    </Tr>
+  );
+};
 
 interface ManageCategoriesModalProps {
   isOpen: boolean;
@@ -38,39 +61,63 @@ interface ManageCategoriesModalProps {
   onCategoriesChanged: () => void;
 }
 
-export const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ isOpen, onClose, onCategoriesChanged }) => {
+export const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({
+  isOpen,
+  onClose,
+  onCategoriesChanged,
+}) => {
   const [categories, setCategories] = useState<PromptCategory[]>([]);
   const [allCategories, setAllCategories] = useState<PromptCategory[]>([]);
-  const [loading, setLoading] = useState(false);
   const [editingCategory, setEditingCategory] = useState<PromptCategory | null>(null);
   const [name, setName] = useState('');
   const [parentId, setParentId] = useState<string>('');
   const toast = useToast();
 
-  const loadCategories = async () => {
-    setLoading(true);
+  const sortedCategories = useMemo(() => {
+    const flattenCategories = (
+      cats: PromptCategory[],
+      parentId: string | null = null,
+      depth: number = 0
+    ): { category: PromptCategory; depth: number }[] => {
+      let result: { category: PromptCategory; depth: number }[] = [];
+      const children = cats.filter((c) => c.parentId === parentId || (parentId === null && !c.parentId));
+
+      // Sort by order if available, otherwise by name
+      children.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+      for (const child of children) {
+        result.push({ category: child, depth });
+        result = result.concat(flattenCategories(cats, child.id, depth + 1));
+      }
+      return result;
+    };
+
+    return flattenCategories(allCategories);
+  }, [allCategories]);
+
+  const loadCategories = useCallback(async () => {
     try {
       const data = await fetchCategoryData();
       setAllCategories(data);
       setCategories(data.filter((cat) => cat.type === 'user'));
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error fetching categories',
         status: 'error',
       });
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     if (isOpen) {
       loadCategories();
     }
-  }, [isOpen]);
+  }, [isOpen, loadCategories]);
 
-  const handleSave = async () => {
-    if (!name.trim()) return;
+  const handleSave = useCallback(async () => {
+    if (!name.trim()) {
+      return;
+    }
 
     try {
       if (editingCategory) {
@@ -85,34 +132,47 @@ export const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ is
       setEditingCategory(null);
       loadCategories();
       onCategoriesChanged();
-    } catch (error) {
+    } catch {
       toast({ title: 'Error saving category', status: 'error' });
     }
-  };
+  }, [name, editingCategory, parentId, toast, loadCategories, onCategoriesChanged]);
 
-  const handleEdit = (category: PromptCategory) => {
+  const handleEdit = useCallback((category: PromptCategory) => {
     setEditingCategory(category);
     setName(category.name);
     setParentId(category.parentId || '');
-  };
+  }, []);
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Are you sure?')) return;
-    try {
-      await deleteCategoryData(id);
-      toast({ title: 'Category deleted', status: 'success' });
-      loadCategories();
-      onCategoriesChanged();
-    } catch (error) {
-      toast({ title: 'Error deleting category', status: 'error' });
-    }
-  };
+  const handleDelete = useCallback(
+    async (id: string) => {
+      if (!window.confirm('Are you sure?')) {
+        return;
+      }
+      try {
+        await deleteCategoryData(id);
+        toast({ title: 'Category deleted', status: 'success' });
+        loadCategories();
+        onCategoriesChanged();
+      } catch {
+        toast({ title: 'Error deleting category', status: 'error' });
+      }
+    },
+    [loadCategories, onCategoriesChanged, toast]
+  );
 
-  const handleCancelEdit = () => {
+  const handleCancelEdit = useCallback(() => {
     setEditingCategory(null);
     setName('');
     setParentId('');
-  };
+  }, []);
+
+  const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  }, []);
+
+  const handleParentIdChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setParentId(e.target.value);
+  }, []);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
@@ -125,21 +185,17 @@ export const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ is
             <Flex gap={2} alignItems="flex-end" wrap="wrap">
               <FormControl flex="1">
                 <FormLabel>{editingCategory ? 'Edit Category' : 'New Category'}</FormLabel>
-                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Category Name" />
+                <Input value={name} onChange={handleNameChange} placeholder="Category Name" />
               </FormControl>
               <FormControl flex="1">
                 <FormLabel>Parent Category</FormLabel>
-                <Select
-                  value={parentId}
-                  onChange={(e) => setParentId(e.target.value)}
-                  placeholder="Select parent (optional)"
-                >
+                <Select value={parentId} onChange={handleParentIdChange} placeholder="Select parent (optional)">
                   <option value="">None</option>
-                  {allCategories
-                    .filter((c) => c.id !== editingCategory?.id) // Prevent selecting self as parent
-                    .map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
+                  {sortedCategories
+                    .filter(({ category }) => category.id !== editingCategory?.id) // Prevent selecting self as parent
+                    .map(({ category, depth }) => (
+                      <option key={category.id} value={category.id}>
+                        {'\u00A0'.repeat(depth * 4) + category.name}
                       </option>
                     ))}
                 </Select>
@@ -159,26 +215,7 @@ export const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ is
               </Thead>
               <Tbody>
                 {categories.map((cat) => (
-                  <Tr key={cat.id}>
-                    <Td>{cat.name}</Td>
-                    <Td>
-                      <Flex gap={2}>
-                        <IconButton
-                          aria-label="Edit"
-                          icon={<PiPencilBold />}
-                          size="sm"
-                          onClick={() => handleEdit(cat)}
-                        />
-                        <IconButton
-                          aria-label="Delete"
-                          icon={<PiTrashBold />}
-                          size="sm"
-                          colorScheme="red"
-                          onClick={() => handleDelete(cat.id)}
-                        />
-                      </Flex>
-                    </Td>
-                  </Tr>
+                  <CategoryRow key={cat.id} category={cat} onEdit={handleEdit} onDelete={handleDelete} />
                 ))}
               </Tbody>
             </Table>
