@@ -22,7 +22,7 @@ export const USE_MOCK_TEMPLATE_API = false;
 
 const NETWORK_DELAY_MS = 450;
 
-const buildUnsplashUrl = (query: string) => `https://images.unsplash.com/${query}?auto=format&fit=crop&w=300&q=80`;
+const _buildUnsplashUrl = (query: string) => `https://images.unsplash.com/${query}?auto=format&fit=crop&w=300&q=80`;
 
 const initialMockCategories: PromptCategory[] = [];
 

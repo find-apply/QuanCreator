@@ -84,13 +84,24 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({
       transition="all 0.2s"
       cursor="pointer"
       overflow="hidden"
-      h="100%"
+      minH="280px"
       display="flex"
       flexDirection="column"
     >
-      <Box position="relative" h="140px" w="100%" bg="base.800">
+      <Box position="relative" h="140px" w="100%" bg="base.800" flexShrink={0}>
         {template.image ? (
-          <Image src={template.image} alt={template.name} objectFit="cover" w="100%" h="100%" />
+          <Image
+            src={template.image}
+            alt={template.name}
+            objectFit="cover"
+            w="100%"
+            h="100%"
+            fallback={
+              <Flex align="center" justify="center" h="100%" fontSize="4xl" bg="base.800">
+                {template.emoji || '🎨'}
+              </Flex>
+            }
+          />
         ) : (
           <Flex align="center" justify="center" h="100%" fontSize="4xl">
             {template.emoji || '🎨'}

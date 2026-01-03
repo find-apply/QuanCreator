@@ -11,6 +11,7 @@ import { GenerateTabAutoLayout } from 'features/ui/layouts/generate-tab-auto-lay
 import { ModelsTabAutoLayout } from 'features/ui/layouts/models-tab-auto-layout';
 import { navigationApi } from 'features/ui/layouts/navigation-api';
 import { QueueTabAutoLayout } from 'features/ui/layouts/queue-tab-auto-layout';
+import { TemplatesTabAutoLayout } from 'features/ui/layouts/templates-tab-auto-layout';
 import { UpscalingTabAutoLayout } from 'features/ui/layouts/upscaling-tab-auto-layout';
 import { WorkflowsTabAutoLayout } from 'features/ui/layouts/workflows-tab-auto-layout';
 import { selectActiveTab } from 'features/ui/store/uiSelectors';
@@ -37,6 +38,7 @@ const TabContent = memo(() => {
       {tab === 'workflows' && <WorkflowsTabAutoLayout />}
       {tab === 'models' && <ModelsTabAutoLayout />}
       {tab === 'queue' && <QueueTabAutoLayout />}
+      {tab === 'templates' && <TemplatesTabAutoLayout />}
       <SwitchingTabsLoader />
     </Flex>
   );

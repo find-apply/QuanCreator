@@ -69,6 +69,18 @@ const mapTemplateResponse = (template: any): PromptTemplate => {
       }))
     : [];
 
+  // Handle image URL - API returns full URL in 'image' field
+  let imageUrl: string | undefined;
+  const rawImage = template.image_url || template.image;
+  if (rawImage) {
+    // If it's already a full URL, use it directly; otherwise convert it
+    if (rawImage.startsWith('http://') || rawImage.startsWith('https://')) {
+      imageUrl = rawImage;
+    } else {
+      imageUrl = convertToApiAssetUrl(rawImage);
+    }
+  }
+
   return {
     id: template.id?.toString() || '',
     name: template.name || '',
@@ -82,7 +94,7 @@ const mapTemplateResponse = (template: any): PromptTemplate => {
     categoryIds: categoryIds,
     categories: categories,
     emoji: undefined,
-    image: template.image ? convertToApiAssetUrl(template.image) : undefined,
+    image: imageUrl,
     isDefault: isSystem,
     isEditable: !isSystem,
     assignedUserIds: [],

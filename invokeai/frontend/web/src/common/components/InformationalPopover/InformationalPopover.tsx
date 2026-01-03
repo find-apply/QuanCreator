@@ -87,13 +87,19 @@ const Content = ({ data, feature, hideDisable }: ContentProps) => {
   const dispatch = useAppDispatch();
   const heading = useMemo<string | undefined>(() => t(`popovers.${feature}.heading`), [feature, t]);
 
-  const paragraphs = useMemo<string[]>(
-    () =>
-      t<string, { returnObjects: true }, string[]>(`popovers.${feature}.paragraphs`, {
-        returnObjects: true,
-      }) ?? [],
-    [feature, t]
-  );
+  const paragraphs = useMemo<string[]>(() => {
+    const result = t<string, { returnObjects: true }, string[]>(`popovers.${feature}.paragraphs`, {
+      returnObjects: true,
+    });
+    // Ensure we always return an array, even if translation is missing or returns a string
+    if (Array.isArray(result)) {
+      return result;
+    }
+    if (typeof result === 'string' && result !== `popovers.${feature}.paragraphs`) {
+      return [result];
+    }
+    return [];
+  }, [feature, t]);
 
   const onClickLearnMore = useCallback(() => {
     if (!data?.href) {

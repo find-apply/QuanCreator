@@ -14,6 +14,7 @@ export interface PromptCategory {
   order?: number;
   isUserCreated?: boolean;
   validated_by_admin?: boolean;
+  children?: PromptCategory[];
 }
 
 export interface PromptTemplate {

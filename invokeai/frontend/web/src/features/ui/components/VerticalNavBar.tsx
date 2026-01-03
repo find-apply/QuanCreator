@@ -10,6 +10,7 @@ import {
   PiCubeBold,
   PiFlowArrowBold,
   PiFrameCornersBold,
+  PiNotebookBold,
   PiQueueBold,
   PiTextAaBold,
 } from 'react-icons/pi';
@@ -29,6 +30,7 @@ export const VerticalNavBar = memo(() => {
         <TabButton tab="canvas" icon={<PiBoundingBoxBold />} label={t('ui.tabs.canvas')} />
         <TabButton tab="upscaling" icon={<PiFrameCornersBold />} label={t('ui.tabs.upscaling')} />
         <TabButton tab="workflows" icon={<PiFlowArrowBold />} label={t('ui.tabs.workflows')} />
+        <TabButton tab="templates" icon={<PiNotebookBold />} label={t('ui.tabs.templates', 'Templates')} />
       </Flex>
 
       <Spacer />

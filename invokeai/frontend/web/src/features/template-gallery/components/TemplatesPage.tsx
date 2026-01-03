@@ -2,14 +2,9 @@ import {
   Button,
   Flex,
   Grid,
+  Heading,
   Input,
   InputGroup,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Spinner,
   useToast,
 } from '@invoke-ai/ui-library';
@@ -19,18 +14,14 @@ import { negativePromptChanged, positivePromptChanged } from 'features/controlLa
 import { fetchCategoryData } from 'features/template-gallery/services/templateDataSource';
 import { useTemplateStore } from 'features/template-gallery/store/useTemplateStore';
 import type { PromptCategory, PromptTemplate } from 'features/template-gallery/types';
+import { navigationApi } from 'features/ui/layouts/navigation-api';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { PiPlusBold } from 'react-icons/pi';
 
 import { buildCategoryLookupFromTree, buildCategoryTree, calculateTemplateCounts, CategoryTab, getAllDescendantIds } from './CategoryTab';
 import { TemplateCard } from './TemplateCard';
 
-interface TemplateGalleryProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ isOpen, onClose }) => {
+export const TemplatesPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const toast = useToast();
   const { templates, loading, fetchTemplates, deleteTemplate, activeTemplateId, setActiveTemplate } =
@@ -42,17 +33,15 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ isOpen, onClos
   const [categoryLookup, setCategoryLookup] = useState<Map<string, PromptCategory>>(new Map());
 
   useEffect(() => {
-    if (isOpen) {
-      fetchTemplates();
-      fetchCategoryData().then((cats) => {
-        // Build hierarchical tree
-        const tree = buildCategoryTree(cats);
-        setCategoryTree(tree);
-        // Build lookup from tree to preserve children references
-        setCategoryLookup(buildCategoryLookupFromTree(tree));
-      });
-    }
-  }, [isOpen, fetchTemplates]);
+    fetchTemplates();
+    fetchCategoryData().then((cats) => {
+      // Build hierarchical tree
+      const tree = buildCategoryTree(cats);
+      setCategoryTree(tree);
+      // Build lookup from tree to preserve children references
+      setCategoryLookup(buildCategoryLookupFromTree(tree));
+    });
+  }, [fetchTemplates]);
 
   // Get all category IDs to filter by (including descendants)
   const filterCategoryIds = useMemo(() => {
@@ -98,7 +87,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ isOpen, onClos
     return filtered;
   }, [templates, filterCategoryIds, searchQuery]);
 
-  // Calculate template counts for each category (including descendants)
+  // Calculate template counts per category
   const templateCounts = useMemo(() => {
     return calculateTemplateCounts(templates, categoryLookup);
   }, [templates, categoryLookup]);
@@ -107,6 +96,10 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ isOpen, onClos
     setSelectedCategoryId(categoryId);
   }, []);
 
+  const handleSelectAllCategory = useCallback(() => {
+    handleSelectCategory(null);
+  }, [handleSelectCategory]);
+
   const handleSelectTemplate = useCallback(
     (template: PromptTemplate) => {
       dispatch(positivePromptChanged(template.positivePrompt));
@@ -114,7 +107,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ isOpen, onClos
         dispatch(negativePromptChanged(template.negativePrompt));
       }
       setActiveTemplate(template.id);
-      onClose();
+      // Navigate to generate tab after selecting a template
+      navigationApi.switchToTab('generate');
       toast({
         title: 'Template Applied',
         description: `Applied template: ${template.name}`,
@@ -123,12 +117,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ isOpen, onClos
         isClosable: true,
       });
     },
-    [dispatch, onClose, setActiveTemplate, toast]
+    [dispatch, setActiveTemplate, toast]
   );
-
-  const handleSelectAllCategory = useCallback(() => {
-    handleSelectCategory(null);
-  }, [handleSelectCategory]);
 
   const handleDeleteTemplate = useCallback(
     async (id: string) => {
@@ -171,77 +161,76 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ isOpen, onClos
   }, []);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered>
-      <ModalOverlay />
-      <ModalContent h="85vh" display="flex" flexDirection="column">
-        <ModalHeader>Template Gallery</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody display="flex" flexDirection="column" gap={4} flex={1} overflow="hidden">
-          <Flex justify="space-between" align="center" gap={4}>
-            <InputGroup maxW="400px">
-              <Input placeholder="Search templates..." value={searchQuery} onChange={handleSearchChange} />
-            </InputGroup>
-            <Button leftIcon={<PiPlusBold />} colorScheme="invokeBlue" onClick={handleCreateTemplate}>
-              Create Template
-            </Button>
-          </Flex>
+    <Flex direction="column" w="full" h="full" p={6} gap={4} overflow="hidden" bg="base.900">
+      <Flex justify="space-between" align="center">
+        <Heading size="lg">Template Gallery</Heading>
+        <Button leftIcon={<PiPlusBold />} colorScheme="invokeBlue" onClick={handleCreateTemplate}>
+          Create Template
+        </Button>
+      </Flex>
 
-          {/* Category tabs with hierarchical dropdowns */}
-          <Flex flexWrap="wrap" gap={2} alignItems="center">
-            <Button
-              size="sm"
-              variant={selectedCategoryId === null ? 'solid' : 'ghost'}
-              colorScheme={selectedCategoryId === null ? 'invokeBlue' : undefined}
-              borderRadius="full"
-              onClick={handleSelectAllCategory}
-              px={4}
-            >
-              All ({templates.length})
-            </Button>
-            {categoryTree.map((category) => (
-              <CategoryTab
-                key={category.id}
-                category={category}
-                isSelected={selectedCategoryId === category.id}
-                onSelect={handleSelectCategory}
-                templateCounts={templateCounts}
-              />
-            ))}
-          </Flex>
+      <Flex justify="space-between" align="center" gap={4}>
+        <InputGroup maxW="400px">
+          <Input placeholder="Search templates..." value={searchQuery} onChange={handleSearchChange} />
+        </InputGroup>
+      </Flex>
 
-          {loading.templates ? (
-            <Flex justify="center" align="center" flex={1}>
-              <Spinner size="xl" />
-            </Flex>
-          ) : filteredTemplates.length === 0 ? (
-            <IAINoContentFallback label="No templates found" icon={null} />
-          ) : (
-            <Grid
-              templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
-              gap={4}
-              overflowY="auto"
-              p={1}
-              flex={1}
-              alignContent="start"
-            >
-              {filteredTemplates.map((template) => (
-                <TemplateCard
-                  key={template.id}
-                  template={template}
-                  isCustom={!template.isDefault}
-                  isSelected={activeTemplateId === template.id}
-                  categoryLookup={categoryLookup}
-                  onSelect={handleSelectTemplate}
-                  onDuplicate={handleDuplicate}
-                  onEdit={handleEdit}
-                  onDelete={handleDeleteTemplate}
-                  onView={handleView}
-                />
-              ))}
-            </Grid>
-          )}
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+      {/* Category tabs with hierarchical dropdowns */}
+      <Flex flexWrap="wrap" gap={2} alignItems="center">
+        <Button
+          size="sm"
+          variant={selectedCategoryId === null ? 'solid' : 'ghost'}
+          colorScheme={selectedCategoryId === null ? 'invokeBlue' : undefined}
+          borderRadius="full"
+          onClick={handleSelectAllCategory}
+          px={4}
+        >
+          All ({templates.length})
+        </Button>
+        {categoryTree.map((category) => (
+          <CategoryTab
+            key={category.id}
+            category={category}
+            isSelected={selectedCategoryId === category.id}
+            onSelect={handleSelectCategory}
+            templateCounts={templateCounts}
+          />
+        ))}
+      </Flex>
+
+      {loading.templates ? (
+        <Flex justify="center" align="center" flex={1}>
+          <Spinner size="xl" />
+        </Flex>
+      ) : filteredTemplates.length === 0 ? (
+        <IAINoContentFallback label="No templates found" icon={null} />
+      ) : (
+        <Grid
+          templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
+          gap={4}
+          overflowY="auto"
+          p={1}
+          flex={1}
+          alignContent="start"
+        >
+          {filteredTemplates.map((template) => (
+            <TemplateCard
+              key={template.id}
+              template={template}
+              isCustom={!template.isDefault}
+              isSelected={activeTemplateId === template.id}
+              categoryLookup={categoryLookup}
+              onSelect={handleSelectTemplate}
+              onDuplicate={handleDuplicate}
+              onEdit={handleEdit}
+              onDelete={handleDeleteTemplate}
+              onView={handleView}
+            />
+          ))}
+        </Grid>
+      )}
+    </Flex>
   );
 };
+
+export default TemplatesPage;
